@@ -127,7 +127,7 @@ if (canvas && window.THREE) {
     wrapText(ctx, subtitle, 66, 244, 820, 44);
     ctx.fillStyle = "#d8b24c";
     ctx.font = '900 28px "Segoe UI", Arial, sans-serif';
-    ctx.fillText("BRN PR WAR BOARD", 64, 450);
+    ctx.fillText("BRN PR ASSISTANT", 64, 450);
     const texture = new THREE.CanvasTexture(c);
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
     if (THREE.sRGBEncoding) texture.encoding = THREE.sRGBEncoding;
