@@ -3,11 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>BRN Content Calendar</title>
+    <title>BRN PR Calendar V2</title>
     <meta
       name="description"
       content="ปฏิทินคอนเทนต์และคัมภีร์ทีมประชาสัมพันธ์ เทศบาลเมืองบางรักน้อย"
     />
+    <link rel="icon" href="data:," />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -49,6 +50,53 @@
         </header>
 
         <section class="page-section active" id="today">
+          <div class="command-hero" aria-label="BRN PR Calendar V2">
+            <canvas id="brn-3d-scene" aria-label="ฉาก 3D เมืองและมาสคอตทีมประชาสัมพันธ์"></canvas>
+            <div class="hero-overlay">
+              <div class="hero-copy">
+                <div class="app-logo-mark" aria-label="BRN PR Calendar logo">
+                  <span>BRN</span>
+                  <strong>PR</strong>
+                  <i></i>
+                </div>
+                <p class="hero-kicker">BRN PR Calendar V2</p>
+                <h3 id="v2-today-heading">วันนี้ทีมต้องสื่อสารอะไร</h3>
+                <p id="v2-today-summary">
+                  ปฏิทินคอนเทนต์สำหรับทีมประชาสัมพันธ์ เปิดแล้วรู้ทิศทางวันนี้ทันที
+                </p>
+                <div class="mission-actions">
+                  <button class="primary-action" data-section-target="prompts">
+                    สร้าง Prompt งานวันนี้
+                  </button>
+                  <button class="secondary-action" data-section-target="calendar">
+                    ดูปฏิทินเดือนนี้
+                  </button>
+                </div>
+              </div>
+
+              <div class="hero-brief">
+                <div class="mascot-cue">
+                  <span>น้องคอนเทนต์</span>
+                  <strong id="mascot-caption">กำลังชี้งานที่ควรเล่าวันนี้</strong>
+                </div>
+                <div class="signal-grid">
+                  <div>
+                    <span data-metric="events">0</span>
+                    <p>วันสำคัญเดือนนี้</p>
+                  </div>
+                  <div>
+                    <span data-metric="tasks">0</span>
+                    <p>งานทีมเดือนนี้</p>
+                  </div>
+                  <div>
+                    <span data-metric="ready">0</span>
+                    <p>พร้อมเผยแพร่</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="hero-grid">
             <article class="mission-panel">
               <div class="mission-kicker">Daily PR Room</div>
@@ -301,6 +349,8 @@
       </main>
     </div>
 
+    <script src="./assets/vendor/three.min.js"></script>
+    <script src="./scene.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>

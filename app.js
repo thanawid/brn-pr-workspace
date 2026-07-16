@@ -249,6 +249,29 @@ function renderToday() {
     ...todayTasks.map((item) => ({ ...item, idea: item.shot, type: "งานเทศบาล" })),
   ];
   const visibleRows = rows.length ? rows : fallback;
+  const v2Heading = document.getElementById("v2-today-heading");
+  const v2Summary = document.getElementById("v2-today-summary");
+  const mascotCaption = document.getElementById("mascot-caption");
+  if (v2Heading) v2Heading.textContent = `วันนี้ ${thaiDate(today)}`;
+  if (v2Summary) {
+    v2Summary.textContent =
+      todayEvents.length || todayTasks.length
+        ? "มีหัวข้อที่ควรสื่อสารแล้ว เลือก 1-2 เรื่องให้ทีมทำให้จบในวันนี้ แล้วใช้ Prompt ต่อในทันใจ AI Studio"
+        : "วันนี้ไม่มีวันสำคัญหลัก เลือกภารกิจเมืองหนึ่งเรื่องแล้วเล่าแบบ ปัญหา > ลงมือ > ผลลัพธ์ > ประชาชนช่วยอะไรได้";
+  }
+  if (mascotCaption) {
+    mascotCaption.textContent = visibleRows[0]?.title
+      ? `เริ่มจาก "${visibleRows[0].title}" แล้วค่อยต่อด้วยช่องทางที่เหมาะ`
+      : "เริ่มจากงานภาคสนามหนึ่งเรื่อง แล้วทำให้ประชาชนเห็นผลลัพธ์";
+  }
+  document.dispatchEvent(
+    new CustomEvent("brn:data", {
+      detail: {
+        todayCount: visibleRows.length,
+        hasLiveTask: todayTasks.length > 0,
+      },
+    })
+  );
 
   list.innerHTML = visibleRows
     .map(
@@ -276,6 +299,12 @@ function renderMetrics() {
   document.getElementById("metric-events").textContent = events.filter((event) => parseISO(event.date).getMonth() === month).length;
   document.getElementById("metric-tasks").textContent = tasks.filter((task) => parseISO(task.date).getMonth() === month).length;
   document.getElementById("metric-ready").textContent = tasks.filter((task) => task.status === "เผยแพร่แล้ว" || task.status === "รออนุมัติ").length;
+  const metricEvents = events.filter((event) => parseISO(event.date).getMonth() === month).length;
+  const metricTasks = tasks.filter((task) => parseISO(task.date).getMonth() === month).length;
+  const metricReady = tasks.filter((task) => task.status === "เผยแพร่แล้ว" || task.status === "รออนุมัติ").length;
+  document.querySelectorAll('[data-metric="events"]').forEach((item) => (item.textContent = metricEvents));
+  document.querySelectorAll('[data-metric="tasks"]').forEach((item) => (item.textContent = metricTasks));
+  document.querySelectorAll('[data-metric="ready"]').forEach((item) => (item.textContent = metricReady));
   return items;
 }
 

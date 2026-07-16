@@ -1,4 +1,4 @@
-# BRN Content Calendar
+# BRN PR Calendar V2
 
 เว็บแอปหน้าเปิดประจำวันของทีมประชาสัมพันธ์เทศบาลเมืองบางรักน้อย
 
@@ -10,6 +10,8 @@
 - บอร์ดสถานะงาน PR
 - คัมภีร์ PR ตามวิสัยทัศน์ใหม่
 - Prompt สำหรับนำไปใช้ต่อในทันใจ AI Studio
+- ฉาก 3D ด้วย Three.js แบบ local ไม่พึ่ง CDN ตอนใช้งานจริง และเปิดจากไฟล์ `index.html` ได้
+- โทนม่วงทองเทศบาล + ส้ม PR
 
 ## เปิดใช้งานในเครื่อง
 
@@ -21,7 +23,7 @@ node server.mjs
 
 ## ใช้กับ GitHub Pages
 
-โปรเจกต์นี้เป็นเว็บ static ใช้ไฟล์หลักคือ `index.html`, `styles.css`, `app.js` และโฟลเดอร์ `assets/`
+โปรเจกต์นี้เป็นเว็บ static ใช้ไฟล์หลักคือ `index.html`, `styles.css`, `app.js`, `scene.js` และโฟลเดอร์ `assets/`
 
 วิธีขึ้น GitHub Pages:
 
