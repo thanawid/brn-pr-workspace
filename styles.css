@@ -2232,7 +2232,7 @@ body {
   }
 }
 
-/* V7: clean purple-orange-gray calendar homepage */
+/* Clean purple-orange-gray calendar homepage */
 :root {
   --v7-bg: #f6f3f7;
   --v7-grid: rgba(77, 36, 122, 0.08);
@@ -2573,4 +2573,138 @@ body {
   .home-day-cell {
     min-height: 118px;
   }
+}
+
+/* Final typography and palette cleanup: no public version label, modern Thai UI */
+:root {
+  --ui-font: "Noto Sans Thai", "Leelawadee UI", "Segoe UI", Tahoma, sans-serif;
+  --display-font: "Anuphan", "Noto Sans Thai", "Leelawadee UI", "Segoe UI", sans-serif;
+  --v7-bg: #f4f2f5;
+  --v7-grid: rgba(62, 46, 75, 0.075);
+  --v7-card: #ffffff;
+  --v7-ink: #22142f;
+  --v7-muted: #6f6678;
+  --v7-purple: #2a103f;
+  --v7-purple-2: #563174;
+  --v7-lavender: #eee7f3;
+  --v7-orange: #ff6f22;
+  --v7-orange-dark: #d95513;
+  --v7-gray: #e4e0e7;
+  --v7-gray-2: #f3f1f4;
+  --v7-teal: #d8eee8;
+  font-family: var(--ui-font);
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--ui-font);
+}
+
+.brand-lockup h1,
+.nav-item,
+.topbar h2,
+.calendar-command-head h4,
+.ai-radar-head strong,
+.assistant-head h4,
+.assistant-idea-card h5,
+.v4-panel .panel-title h3,
+.panel-title h3,
+.runway-item strong,
+.workflow-step strong,
+.today-chip,
+.eyebrow {
+  font-family: var(--display-font);
+  letter-spacing: 0;
+}
+
+.topbar h2 {
+  font-weight: 800;
+  line-height: 1.04;
+}
+
+.brand-lockup h1 {
+  font-weight: 800;
+}
+
+.eyebrow {
+  font-weight: 800;
+}
+
+body {
+  background:
+    linear-gradient(90deg, var(--v7-grid) 1px, transparent 1px),
+    linear-gradient(var(--v7-grid) 1px, transparent 1px),
+    linear-gradient(115deg, #f5f3f7 0%, #f7f5f8 54%, #fff4ec 100%);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+.sidebar {
+  background: linear-gradient(120deg, #251036, #3f185e 72%, #4b1f64);
+}
+
+.topbar .eyebrow,
+.calendar-command-panel .eyebrow,
+.assistant-studio .eyebrow,
+.v4-panel .eyebrow {
+  color: var(--v7-purple-2);
+}
+
+.topbar h2,
+.calendar-command-head h4,
+.assistant-head h4,
+.panel-title h3 {
+  color: var(--v7-ink);
+}
+
+.home-calendar-weekdays span {
+  background: #ece3f3;
+  color: var(--v7-purple);
+}
+
+.home-day-cell {
+  color: var(--v7-ink);
+}
+
+.home-day-cell .day-head {
+  color: #73677a;
+}
+
+.event-pill.task,
+.event-pill.custom-day,
+.primary-action {
+  background: var(--v7-orange);
+}
+
+.primary-action:hover {
+  background: var(--v7-orange-dark);
+}
+
+.calendar-hint.home-calendar-hint {
+  border-color: rgba(255, 111, 34, 0.45);
+  color: var(--v7-purple);
+  background: #fff8ee;
+}
+
+.ai-radar-panel,
+.assistant-studio,
+.v4-panel {
+  background: #fff;
+}
+
+.mascot-card,
+.ai-card,
+.shot-strip,
+.assistant-idea-card,
+.runway-item,
+.workflow-step {
+  background: #fff;
+  border-color: var(--v7-gray);
+}
+
+.idea-plan div,
+.event-pill.note {
+  background: var(--v7-gray-2);
 }
