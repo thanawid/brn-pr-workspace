@@ -139,6 +139,7 @@
                 <p class="eyebrow">Selected day</p>
                 <h2 id="selected-date-title">เลือกวันในปฏิทิน</h2>
               </div>
+              <button class="primary-button day-add-button" type="button" data-open-work-modal>จดงานวันนี้</button>
             </div>
 
             <div class="day-command-card">
@@ -157,36 +158,16 @@
 
             <div id="day-items" class="day-items"></div>
 
-            <div class="assistant-card">
-              <div class="assistant-title">
-                <span class="mini-label">แนะนำคอนเทนต์จากงานนี้</span>
-                <h3 id="advice-title">วันนี้ควรเล่าอะไร</h3>
-              </div>
-              <p id="advice-angle"></p>
-              <div class="advice-block">
-                <strong>ควรถ่ายกลับมา</strong>
-                <ul id="shot-list"></ul>
-              </div>
-              <div class="advice-block">
-                <strong>คลิปสั้น 30-45 วิ</strong>
-                <ol id="video-plan"></ol>
-              </div>
-              <div class="ai-actions" aria-label="คำสั่งผู้ช่วย PR">
-                <button type="button" data-ai-action="post">คิดโพสต์</button>
-                <button type="button" data-ai-action="short">สคริปต์คลิป</button>
-                <button type="button" data-ai-action="shots">Shot list</button>
-                <button type="button" data-ai-action="field">เช็กลิสต์หน้างาน</button>
-              </div>
-              <button class="soft-button full-button" id="use-day-prompt" type="button">ส่งโจทย์วันนี้ไป Prompt</button>
-            </div>
-
             <form class="quick-form" id="quick-form">
-              <h3>จดงานเทศบาลลงวันนี้</h3>
+              <div class="quick-form-head">
+                <h3>จดเร็ว</h3>
+                <button class="soft-button" type="button" data-open-work-modal>กรอกละเอียด</button>
+              </div>
               <label>
                 ชื่องาน
                 <input name="title" required placeholder="เช่น สำรวจจุดน้ำขัง / ประชุมชุมชน / นัดถ่ายคลิป" />
               </label>
-              <div class="form-row four">
+              <div class="form-row">
                 <label>
                   เวลา
                   <input name="time" placeholder="เช่น 09.00 น." />
@@ -195,6 +176,8 @@
                   สถานที่
                   <input name="location" placeholder="เช่น ซอยบางรักน้อย 12 / วัด / ชุมชน..." />
                 </label>
+              </div>
+              <div class="form-row">
                 <label>
                   เจ้าของงาน
                   <input name="owner" placeholder="เช่น กองช่าง / สำนักปลัด" />
@@ -204,38 +187,46 @@
                   <input name="responsible" placeholder="เช่น งานประชาสัมพันธ์ / ช่างภาพ" />
                 </label>
               </div>
-              <div class="form-row">
-                <label>
-                  ประเภท
-                  <select name="type"></select>
-                </label>
-                <label>
-                  เสาหลัก
-                  <select name="pillar"></select>
-                </label>
-              </div>
-              <div class="form-row">
-                <label>
-                  ช่องทาง
-                  <select name="channel">
-                    <option>Facebook</option>
-                    <option>LINE @brn12345</option>
-                    <option>YouTube @BangraknoiNews</option>
-                    <option>หลายช่องทาง</option>
-                  </select>
-                </label>
-                <label>
-                  สถานะ
-                  <select name="status"></select>
-                </label>
-              </div>
               <label>
-                สิ่งที่ต้องเก็บ / หมายเหตุ
-                <textarea name="note" rows="3" placeholder="ภาพก่อน-หลัง, คนทำงาน, จุดที่แก้ไข, ข้อควรระวัง"></textarea>
+                สิ่งที่ต้องเก็บ
+                <textarea name="note" rows="2" placeholder="เช่น ภาพก่อน-หลัง, คนทำงาน, จุดที่แก้ไข"></textarea>
               </label>
               <button class="primary-button" type="submit">จดลงปฏิทิน</button>
             </form>
           </aside>
+        </section>
+
+        <section id="content-advice" class="panel content-advice-panel" aria-label="คำแนะนำคอนเทนต์สำหรับวันที่เลือก">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Content helper</p>
+              <h2>แนะนำคอนเทนต์จากงานที่เลือก</h2>
+            </div>
+            <button class="soft-button" id="use-day-prompt" type="button">ส่งโจทย์วันนี้ไป Prompt</button>
+          </div>
+          <div class="assistant-card content-advice-card">
+            <div class="assistant-title">
+              <span class="mini-label">มุมเล่าเรื่อง</span>
+              <h3 id="advice-title">วันนี้ควรเล่าอะไร</h3>
+            </div>
+            <p id="advice-angle"></p>
+            <div class="advice-grid">
+              <div class="advice-block">
+                <strong>ควรถ่ายกลับมา</strong>
+                <ul id="shot-list"></ul>
+              </div>
+              <div class="advice-block">
+                <strong>คลิปสั้น 30-45 วิ</strong>
+                <ol id="video-plan"></ol>
+              </div>
+            </div>
+            <div class="ai-actions" aria-label="คำสั่งผู้ช่วย PR">
+              <button type="button" data-ai-action="post">คิดโพสต์</button>
+              <button type="button" data-ai-action="short">สคริปต์คลิป</button>
+              <button type="button" data-ai-action="shots">Shot list</button>
+              <button type="button" data-ai-action="field">เช็กลิสต์หน้างาน</button>
+            </div>
+          </div>
         </section>
 
         <section class="summary-strip" aria-label="สรุปภาพรวมเดือน">
@@ -349,7 +340,7 @@
             ชื่องาน / ภารกิจ
             <input name="title" required placeholder="เช่น ลงพื้นที่ลอกท่อ / งานประชุมชุมชน / นัดถ่ายคลิปแจ้งข่าว" />
           </label>
-          <div class="form-row four">
+          <div class="form-row three">
             <label>
               วัน
               <input name="dateText" readonly />
@@ -362,17 +353,8 @@
               สถานที่
               <input name="location" placeholder="เช่น ชุมชน... / ซอย... / วัด..." />
             </label>
-            <label>
-              ช่องทาง
-              <select name="channel">
-                <option>Facebook</option>
-                <option>LINE @brn12345</option>
-                <option>YouTube @BangraknoiNews</option>
-                <option>หลายช่องทาง</option>
-              </select>
-            </label>
           </div>
-          <div class="form-row four">
+          <div class="form-row">
             <label>
               เจ้าของงาน
               <input name="owner" placeholder="เช่น กองช่าง / กองสาธารณสุข / สำนักปลัด" />
@@ -381,29 +363,41 @@
               ผู้รับผิดชอบ
               <input name="responsible" placeholder="เช่น งานประชาสัมพันธ์ / ผู้ถ่ายภาพ / ผู้ประสาน" />
             </label>
-            <label>
-              ประเภท
-              <select name="type"></select>
-            </label>
-            <label>
-              สถานะ
-              <select name="status"></select>
-            </label>
-          </div>
-          <div class="form-row">
-            <label>
-              เสาหลัก
-              <select name="pillar"></select>
-            </label>
-            <label>
-              ต้องเก็บภาพ/วิดีโออะไร
-              <input name="noteQuick" placeholder="เช่น ภาพก่อน-หลัง คนทำงาน จุดปัญหา ผลลัพธ์" />
-            </label>
           </div>
           <label class="wide">
-            โน้ตเพิ่มเติม
-            <textarea name="note" rows="4" placeholder="รายละเอียดหน้างาน ข้อควรระวัง ข้อมูลที่ต้องเช็กก่อนโพสต์"></textarea>
+            ต้องเก็บภาพ/วิดีโออะไร
+            <input name="noteQuick" placeholder="เช่น ภาพก่อน-หลัง คนทำงาน จุดปัญหา ผลลัพธ์" />
           </label>
+          <details class="advanced-fields">
+            <summary>รายละเอียดเพิ่มเติม</summary>
+            <div class="form-row four">
+              <label>
+                ช่องทาง
+                <select name="channel">
+                  <option>Facebook</option>
+                  <option>LINE @brn12345</option>
+                  <option>YouTube @BangraknoiNews</option>
+                  <option>หลายช่องทาง</option>
+                </select>
+              </label>
+              <label>
+                ประเภท
+                <select name="type"></select>
+              </label>
+              <label>
+                เสาหลัก
+                <select name="pillar"></select>
+              </label>
+              <label>
+                สถานะ
+                <select name="status"></select>
+              </label>
+            </div>
+            <label class="wide">
+              โน้ตเพิ่มเติม
+              <textarea name="note" rows="3" placeholder="รายละเอียดหน้างาน ข้อควรระวัง ข้อมูลที่ต้องเช็กก่อนโพสต์"></textarea>
+            </label>
+          </details>
           <button class="primary-button" type="submit">จดงานลงวันนี้</button>
         </form>
       </section>

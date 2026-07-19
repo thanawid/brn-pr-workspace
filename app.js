@@ -932,6 +932,12 @@ function bindEvents() {
   });
 
   document.body.addEventListener("click", (event) => {
+    const modalButton = event.target.closest("[data-open-work-modal]");
+    if (modalButton) {
+      openWorkModal(selectedDate);
+      return;
+    }
+
     const openButton = event.target.closest("[data-open-date]");
     if (openButton) {
       selectedDate = openButton.dataset.openDate;
