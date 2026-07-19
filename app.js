@@ -224,6 +224,7 @@ const defaultEntries = [
     location: "จุดเสี่ยงน้ำขังในพื้นที่เทศบาล",
     owner: "งานประชาสัมพันธ์ + กองช่าง",
     responsible: "ทีมถ่ายภาพ + แอดมินเพจ",
+    image: "",
     title: "สำรวจจุดน้ำขังหลังฝนและท่อระบายน้ำ",
     type: "งานเทศบาล",
     pillar: "ปลอดภัย",
@@ -238,6 +239,7 @@ const defaultEntries = [
     location: "ถนน/ซอยที่มีไฟสาธารณะดับ",
     owner: "งานประชาสัมพันธ์",
     responsible: "ทีมวิดีโอสั้น",
+    image: "",
     title: "คลิปสั้นแนะนำการแจ้งไฟสาธารณะดับ",
     type: "คอนเทนต์ไอเดีย",
     pillar: "ปลอดภัย",
@@ -252,6 +254,7 @@ const defaultEntries = [
     location: "คลองและจุดเก็บขยะตกค้าง",
     owner: "งานประชาสัมพันธ์ + งานรักษาความสะอาด",
     responsible: "ทีมภาพข่าว",
+    image: "",
     title: "สรุปงานเก็บขยะตกค้างและคลองสะอาด",
     type: "งานเทศบาล",
     pillar: "สะอาด",
@@ -326,7 +329,11 @@ function loadEntries() {
 }
 
 function saveEntries() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  } catch {
+    toast("พื้นที่เก็บข้อมูลในเบราว์เซอร์เต็ม ลองใช้รูปขนาดเล็กลงหรือลบงานเก่า");
+  }
 }
 
 function userEntriesForDate(iso) {
@@ -403,6 +410,10 @@ function displayChannel(item) {
 function displayTime(item) {
   if (!item) return "ตามแผนทีม";
   return item.time || "ยังไม่ระบุเวลา";
+}
+
+function displayImage(item) {
+  return item?.image || "";
 }
 
 function adviceForDate(iso) {
@@ -487,9 +498,24 @@ function renderCalendar() {
   const gridStart = new Date(YEAR, activeMonth, 1 - startOffset);
   const todayIso = toISO(safeToday());
   const cells = [];
+  const pulseItems = [];
 
   document.getElementById("calendar-title").textContent = `${thaiMonths[activeMonth]} ${THAI_YEAR}`;
   document.getElementById("month-select").value = String(activeMonth);
+
+  const daysInMonth = new Date(YEAR, activeMonth + 1, 0).getDate();
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const iso = toISO(new Date(YEAR, activeMonth, day));
+    const dayItems = allItemsForDate(iso);
+    const hasWork = dayItems.some((item) => item.source === "user");
+    const hasEvent = dayItems.some((item) => item.source === "event");
+    const hasBuddhist = dayItems.some((item) => item.source === "buddhist");
+    const pulseClass = hasWork ? "work" : hasEvent ? "event" : hasBuddhist ? "buddhist" : "";
+    pulseItems.push(`<button class="pulse-dot ${pulseClass}" type="button" data-open-date="${iso}" title="${day} ${thaiMonths[activeMonth]}"></button>`);
+  }
+
+  const monthPulse = document.getElementById("month-pulse");
+  if (monthPulse) monthPulse.innerHTML = pulseItems.join("");
 
   for (let i = 0; i < 42; i += 1) {
     const date = new Date(gridStart);
@@ -527,6 +553,12 @@ function renderDay() {
   const items = allItemsForDate(selectedDate);
   const advice = adviceForDate(selectedDate);
   const daySummary = `${advice.time} · ${advice.location} · ${advice.channel}`;
+  const dayPanel = document.querySelector(".day-panel");
+  if (dayPanel) {
+    dayPanel.classList.remove("is-refreshing");
+    void dayPanel.offsetWidth;
+    dayPanel.classList.add("is-refreshing");
+  }
 
   document.getElementById("selected-date-title").textContent = thaiDate(date);
   document.getElementById("pulse-title").textContent = advice.title;
@@ -550,6 +582,13 @@ function renderDay() {
         .map(
           (item) => `
           <article class="day-item">
+            ${
+              displayImage(item)
+                ? `<div class="work-card-image"><img src="${escapeHtml(displayImage(item))}" alt="ภาพประกอบ ${escapeHtml(item.title)}" /></div>`
+                : item.source === "user"
+                  ? '<div class="work-card-visual"><span>BRN PR</span><strong>FIELD CARD</strong></div>'
+                  : ""
+            }
             <div class="item-meta">
               <span class="tag ${itemClass(item)}">${escapeHtml(itemTag(item))}</span>
               <span class="tag" style="background:${pillars[item.pillar]?.color || pillars["เมืองสมดุล"].color}">${escapeHtml(item.pillar || "เมืองสมดุล")}</span>
@@ -567,7 +606,7 @@ function renderDay() {
         `
         )
         .join("")
-    : `<div class="empty-state">วันนี้ยังไม่มีงานเฉพาะ เพิ่มงานทีมได้ด้านล่าง หรือใช้คำแนะนำจากธีมเดือนนี้เป็นคอนเทนต์สำรอง</div>`;
+    : `<div class="empty-state compact-empty">วันนี้ยังไม่มีงานที่จดไว้ กด “จดงานวันนี้” เพื่อเพิ่มงานเทศบาลลงปฏิทิน</div>`;
 }
 
 function renderStats() {
@@ -662,6 +701,7 @@ function renderBoard() {
                   .map(
                     (item) => `
                     <article class="board-task">
+                      ${displayImage(item) ? `<div class="board-task-image"><img src="${escapeHtml(displayImage(item))}" alt="ภาพประกอบ ${escapeHtml(item.title)}" /></div>` : ""}
                       <strong>${escapeHtml(item.title)}</strong>
                       <small>${thaiDate(parseISO(item.date))} · ${escapeHtml(displayTime(item))} · ${escapeHtml(displayLocation(item))}</small>
                       <small>${escapeHtml(item.type)} · ${escapeHtml(displayChannel(item))} · เจ้าของงาน: ${escapeHtml(displayOwner(item))}</small>
@@ -726,6 +766,7 @@ function promptDetailsForSelectedDay() {
     `สิ่งที่ต้องทำ: ${advice.action}`,
     `มุมเล่าเรื่อง: ${advice.angle}`,
     items.length ? `รายการในปฏิทิน: ${items.map((item) => item.title).join(", ")}` : "รายการในปฏิทิน: ยังไม่มีงานเฉพาะ ใช้เป็นไอเดียสำรองของเดือน",
+    items.some((item) => displayImage(item)) ? "ภาพประกอบ: มีภาพแนบในงานของวันนี้ ใช้เป็นภาพอ้างอิงในการคิดคอนเทนต์ได้" : "ภาพประกอบ: ยังไม่มีภาพแนบ",
     `ควรถ่าย: ${advice.shots.join(", ")}`,
     `แนวคลิป: ${advice.video.join(" | ")}`,
   ];
@@ -787,10 +828,60 @@ function formValue(data, key, fallback = "") {
   return data.get(key)?.toString().trim() || fallback;
 }
 
-function entryFromForm(form, date = selectedDate) {
+function readFileAsDataUrl(file) {
+  if (!file || !file.size) return Promise.resolve("");
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+function resizeImageDataUrl(dataUrl) {
+  return new Promise((resolve) => {
+    if (!dataUrl.startsWith("data:image/")) {
+      resolve(dataUrl);
+      return;
+    }
+
+    const image = new Image();
+    image.onload = () => {
+      const maxSize = 1100;
+      const ratio = Math.min(1, maxSize / Math.max(image.width, image.height));
+      if (ratio >= 1) {
+        resolve(dataUrl);
+        return;
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(image.width * ratio);
+      canvas.height = Math.round(image.height * ratio);
+      const context = canvas.getContext("2d");
+      if (!context) {
+        resolve(dataUrl);
+        return;
+      }
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/jpeg", 0.82));
+    };
+    image.onerror = () => resolve(dataUrl);
+    image.src = dataUrl;
+  });
+}
+
+async function fileToDataUrl(file) {
+  const dataUrl = await readFileAsDataUrl(file);
+  return resizeImageDataUrl(dataUrl);
+}
+
+async function entryFromForm(form, date = selectedDate) {
   const data = new FormData(form);
   const title = formValue(data, "title");
   const noteParts = [formValue(data, "noteQuick"), formValue(data, "note")].filter(Boolean);
+  const imageFile = data.get("image");
+  const image = imageFile && typeof imageFile.size === "number" && imageFile.size > 0 ? await fileToDataUrl(imageFile) : "";
   if (!title) return null;
 
   return {
@@ -806,6 +897,7 @@ function entryFromForm(form, date = selectedDate) {
     channel: formValue(data, "channel", "Facebook"),
     status: formValue(data, "status", "ไอเดีย"),
     note: noteParts.join(" | "),
+    image,
   };
 }
 
@@ -836,6 +928,7 @@ function addIdeaToDate(ideaIndex, iso) {
     channel: "Facebook",
     status: "ไอเดีย",
     note: `${item.format}: ${item.note}`,
+    image: "",
   });
 }
 
@@ -894,6 +987,18 @@ function closeWorkModal() {
   document.body.classList.remove("modal-open");
 }
 
+function cueQuickForm({ focus = false, scroll = false } = {}) {
+  const form = document.getElementById("quick-form");
+  if (!form) return;
+  form.classList.remove("is-focus");
+  void form.offsetWidth;
+  form.classList.add("is-focus");
+  clearTimeout(cueQuickForm.timer);
+  cueQuickForm.timer = setTimeout(() => form.classList.remove("is-focus"), 1400);
+  if (scroll) form.scrollIntoView({ behavior: "smooth", block: "center" });
+  if (focus) setTimeout(() => form.elements.title?.focus(), 180);
+}
+
 function bindEvents() {
   document.querySelectorAll(".nav-link").forEach((link) => {
     link.addEventListener("click", () => {
@@ -932,6 +1037,12 @@ function bindEvents() {
   });
 
   document.body.addEventListener("click", (event) => {
+    const quickAddButton = event.target.closest("[data-focus-quick-add]");
+    if (quickAddButton) {
+      cueQuickForm({ focus: true, scroll: true });
+      return;
+    }
+
     const modalButton = event.target.closest("[data-open-work-modal]");
     if (modalButton) {
       openWorkModal(selectedDate);
@@ -943,6 +1054,7 @@ function bindEvents() {
       selectedDate = openButton.dataset.openDate;
       activeMonth = parseISO(selectedDate).getMonth();
       rerender();
+      if (openButton.closest("#calendar-grid")) cueQuickForm();
       if (!openButton.closest("#calendar-grid")) {
         document.getElementById("calendar").scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -1021,20 +1133,37 @@ function bindEvents() {
     if (event.key === "Escape") closeWorkModal();
   });
 
-  document.getElementById("quick-form").addEventListener("submit", (event) => {
+  document.getElementById("quick-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    addEntry(entryFromForm(form, selectedDate));
-    form.reset();
+    const submitter = event.submitter;
+    if (submitter) submitter.disabled = true;
+    try {
+      const entry = await entryFromForm(form, selectedDate);
+      addEntry(entry);
+      if (entry) form.reset();
+    } catch {
+      toast("อ่านภาพประกอบไม่สำเร็จ ลองเลือกรูปใหม่อีกครั้ง");
+    } finally {
+      if (submitter) submitter.disabled = false;
+    }
   });
 
-  document.getElementById("modal-work-form").addEventListener("submit", (event) => {
+  document.getElementById("modal-work-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    const entry = entryFromForm(form, selectedDate);
-    addEntry(entry);
-    if (entry) closeWorkModal();
-    form.reset();
+    const submitter = event.submitter;
+    if (submitter) submitter.disabled = true;
+    try {
+      const entry = await entryFromForm(form, selectedDate);
+      addEntry(entry);
+      if (entry) closeWorkModal();
+      if (entry) form.reset();
+    } catch {
+      toast("อ่านภาพประกอบไม่สำเร็จ ลองเลือกรูปใหม่อีกครั้ง");
+    } finally {
+      if (submitter) submitter.disabled = false;
+    }
   });
 
   document.getElementById("shuffle-week").addEventListener("click", () => {

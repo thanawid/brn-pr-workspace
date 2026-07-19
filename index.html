@@ -8,7 +8,7 @@
       name="description"
       content="ปฏิทินไทยและผู้ช่วยคิดคอนเทนต์สำหรับทีมประชาสัมพันธ์ เทศบาลเมืองบางรักน้อย"
     />
-    <link rel="icon" type="image/svg+xml" href="./assets/app-icon.svg" />
+    <link rel="icon" type="image/png" href="./assets/logoBN-02.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,7 +21,9 @@
     <div class="app-shell">
       <header class="topbar">
         <a class="brand" href="#calendar" aria-label="กลับไปหน้าปฏิทิน">
-          <span class="brand-mark" aria-hidden="true"><b>BRN</b><em>PR</em></span>
+          <span class="brand-mark brand-mark-image" aria-hidden="true">
+            <img src="./assets/logoBN-02.png" alt="" />
+          </span>
           <span>
             <small>เทศบาลเมืองบางรักน้อย</small>
             <strong>Municipal PR Calendar</strong>
@@ -40,11 +42,11 @@
           <div class="stage-copy">
             <p class="eyebrow">Bangraknoi PR command calendar</p>
             <h1>PR Calendar</h1>
-            <p>จดงานเทศบาลลงปฏิทินก่อน แล้วให้ผู้ช่วย PR แนะนำมุมคอนเทนต์ ภาพที่ควรถ่าย และ Prompt สำหรับเอาไปทำงานต่อ</p>
+            <p>BangraknoiNews อยู่ในปฏิทินเดียวกับงานเทศบาล จดงานก่อน แล้วให้ผู้ช่วย PR แนะนำมุมคอนเทนต์ ภาพที่ควรถ่าย และ Prompt สำหรับเอาไปทำงานต่อ</p>
           </div>
-          <div class="stage-objects" aria-hidden="true">
-            <span class="media-slab slab-one"></span>
-            <span class="media-slab slab-two"></span>
+          <div class="stage-objects brand-stage" aria-hidden="true">
+            <img class="brand-banner" src="./assets/logoBN-01.png" alt="" />
+            <img class="brand-badge" src="./assets/logoBN-02.png" alt="" />
             <span class="creator-mascot"><i></i></span>
           </div>
         </section>
@@ -123,6 +125,7 @@
               </div>
               <select id="month-select" aria-label="เลือกเดือน"></select>
             </div>
+            <div class="month-pulse" id="month-pulse" aria-label="ภาพรวมงานในเดือนนี้"></div>
 
             <div class="calendar-scroll">
               <div class="weekdays" aria-hidden="true">
@@ -139,7 +142,7 @@
                 <p class="eyebrow">Selected day</p>
                 <h2 id="selected-date-title">เลือกวันในปฏิทิน</h2>
               </div>
-              <button class="primary-button day-add-button" type="button" data-open-work-modal>จดงานวันนี้</button>
+              <button class="primary-button day-add-button" type="button" data-focus-quick-add>จดงานวันนี้</button>
             </div>
 
             <div class="day-command-card">
@@ -160,7 +163,7 @@
 
             <form class="quick-form" id="quick-form">
               <div class="quick-form-head">
-                <h3>จดเร็ว</h3>
+                <h3>จดงานในวันที่เลือก</h3>
                 <button class="soft-button" type="button" data-open-work-modal>กรอกละเอียด</button>
               </div>
               <label>
@@ -177,20 +180,27 @@
                   <input name="location" placeholder="เช่น ซอยบางรักน้อย 12 / วัด / ชุมชน..." />
                 </label>
               </div>
-              <div class="form-row">
+              <details class="quick-extra">
+                <summary>เพิ่มภาพ / เจ้าของงาน / สิ่งที่ต้องถ่าย</summary>
+                <div class="form-row">
+                  <label>
+                    เจ้าของงาน
+                    <input name="owner" placeholder="เช่น กองช่าง / สำนักปลัด" />
+                  </label>
+                  <label>
+                    ผู้รับผิดชอบ
+                    <input name="responsible" placeholder="เช่น งานประชาสัมพันธ์ / ช่างภาพ" />
+                  </label>
+                </div>
                 <label>
-                  เจ้าของงาน
-                  <input name="owner" placeholder="เช่น กองช่าง / สำนักปลัด" />
+                  ภาพประกอบการ์ด
+                  <input name="image" type="file" accept="image/*" />
                 </label>
                 <label>
-                  ผู้รับผิดชอบ
-                  <input name="responsible" placeholder="เช่น งานประชาสัมพันธ์ / ช่างภาพ" />
+                  สิ่งที่ต้องเก็บ
+                  <textarea name="note" rows="2" placeholder="เช่น ภาพก่อน-หลัง, คนทำงาน, จุดที่แก้ไข"></textarea>
                 </label>
-              </div>
-              <label>
-                สิ่งที่ต้องเก็บ
-                <textarea name="note" rows="2" placeholder="เช่น ภาพก่อน-หลัง, คนทำงาน, จุดที่แก้ไข"></textarea>
-              </label>
+              </details>
               <button class="primary-button" type="submit">จดลงปฏิทิน</button>
             </form>
           </aside>
@@ -367,6 +377,10 @@
           <label class="wide">
             ต้องเก็บภาพ/วิดีโออะไร
             <input name="noteQuick" placeholder="เช่น ภาพก่อน-หลัง คนทำงาน จุดปัญหา ผลลัพธ์" />
+          </label>
+          <label class="wide">
+            ภาพประกอบการ์ด
+            <input name="image" type="file" accept="image/*" />
           </label>
           <details class="advanced-fields">
             <summary>รายละเอียดเพิ่มเติม</summary>
