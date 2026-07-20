@@ -9,9 +9,9 @@
       content="ปฏิทินไทยและผู้ช่วยคิดคอนเทนต์สำหรับทีมประชาสัมพันธ์ เทศบาลเมืองบางรักน้อย"
     />
     <meta name="theme-color" content="#2b0d46" />
+    <link rel="icon" type="image/png" href="./assets/logoBN-02.png" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="apple-touch-icon" href="./assets/icon-192.png" />
-    <link rel="icon" type="image/png" href="./assets/logoBN-02.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -70,7 +70,50 @@
             <small id="today-month">กำลังโหลดวันที่</small>
             <button id="go-today" type="button">กลับมาวันนี้</button>
           </div>
+          
+        </section>
 
+        <section class="daily-strip" aria-label="สรุปงานประชาสัมพันธ์ของวันที่เลือก">
+          <article class="daily-main">
+            <span>วันนี้ทีมต้องรู้</span>
+            <strong id="pulse-title">กำลังโหลดประเด็น</strong>
+            <p id="pulse-date">เลือกวันในปฏิทินเพื่อดูแผนของวันนั้น</p>
+          </article>
+          <article>
+            <span>ที่ไหน</span>
+            <strong id="pulse-location">-</strong>
+          </article>
+          <article>
+            <span>ทำอะไร</span>
+            <strong id="pulse-action">-</strong>
+          </article>
+          <article>
+            <span>ช่องทาง</span>
+            <strong id="pulse-channel">-</strong>
+          </article>
+        </section>
+
+        <section id="calendar" class="work-grid">
+          <article class="panel calendar-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Municipal work calendar</p>
+                <h2 id="calendar-title">ปฏิทินงานเทศบาล</h2>
+              </div>
+              <div class="calendar-head-actions">
+                <div class="calendar-assist" aria-label="วิธีใช้ปฏิทิน">
+                  <img class="assist-mascot-img" src="./assets/mascot.png" alt="" />
+                  <span>
+                    <strong>จดงานเทศบาลลงวันที่</strong>
+                    <small>คลิกเพื่อดูงาน ดับเบิ้ลคลิกเพื่อเพิ่ม แล้วให้ AI ช่วยคิดคอนเทนต์ต่อ</small>
+                  </span>
+                </div>
+                <div class="month-controls">
+                  <button class="soft-button today-inline" id="go-today-inline" type="button">วันนี้</button>
+                  <button class="icon-button" id="prev-month" type="button" aria-label="เดือนก่อนหน้า">‹</button>
+                  <button class="icon-button" id="next-month" type="button" aria-label="เดือนถัดไป">›</button>
+                </div>
+              </div>
             </div>
 
             <div class="calendar-toolbar">

@@ -1,4 +1,4 @@
-const CACHE = "brn-pr-v2";
+const CACHE = "brn-pr-v3";
 const CORE = ["./","./index.html","./styles.css","./polish.css","./app.js","./polish.js","./assets/icon-192.png","./assets/mascot.png","./stage3d.js","./assets/vendor/three.min.js","./assets/logoBN-01.png","./assets/logoBN-02.png"];
 self.addEventListener("install",(e)=>{
   e.waitUntil(caches.open(CACHE).then((c)=>c.addAll(CORE)).catch(()=>{}));
