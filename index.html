@@ -44,14 +44,14 @@
       <main>
         <section class="creator-stage" aria-label="พื้นที่นำปฏิทินงานประชาสัมพันธ์">
           <div class="stage-copy">
-            <p class="eyebrow">Bangraknoi PR command calendar</p>
+            <p class="eyebrow"><span class="onair"><i></i>ON AIR</span> Bangraknoi PR command calendar</p>
             <h1>PR Calendar</h1>
             <p>BangraknoiNews อยู่ในปฏิทินเดียวกับงานเทศบาล จดงานก่อน แล้วให้ผู้ช่วย PR แนะนำมุมคอนเทนต์ ภาพที่ควรถ่าย และ Prompt สำหรับเอาไปทำงานต่อ</p>
           </div>
+          <canvas id="stage3d" aria-hidden="true"></canvas>
           <div class="stage-objects brand-stage" aria-hidden="true">
-            <img class="brand-banner" src="./assets/logoBN-01.png" alt="" />
-            <img class="brand-badge" src="./assets/logoBN-02.png" alt="" />
-            <span class="creator-mascot"><i></i></span>
+            <img class="mascot-hero" src="./assets/mascot.png" alt="" />
+            <img class="brand-badge badge-mini" src="./assets/logoBN-02.png" alt="" />
           </div>
         </section>
 
@@ -70,55 +70,7 @@
             <small id="today-month">กำลังโหลดวันที่</small>
             <button id="go-today" type="button">กลับมาวันนี้</button>
           </div>
-          <div class="mascot" aria-hidden="true">
-            <div class="mascot-face">
-              <span></span><span></span><i></i>
-            </div>
-            <p>จิ้มวันก่อน เดี๋ยวช่วยคิดคอนเทนต์ให้</p>
-          </div>
-        </section>
 
-        <section class="daily-strip" aria-label="สรุปงานประชาสัมพันธ์ของวันที่เลือก">
-          <article class="daily-main">
-            <span>วันนี้ทีมต้องรู้</span>
-            <strong id="pulse-title">กำลังโหลดประเด็น</strong>
-            <p id="pulse-date">เลือกวันในปฏิทินเพื่อดูแผนของวันนั้น</p>
-          </article>
-          <article>
-            <span>ที่ไหน</span>
-            <strong id="pulse-location">-</strong>
-          </article>
-          <article>
-            <span>ทำอะไร</span>
-            <strong id="pulse-action">-</strong>
-          </article>
-          <article>
-            <span>ช่องทาง</span>
-            <strong id="pulse-channel">-</strong>
-          </article>
-        </section>
-
-        <section id="calendar" class="work-grid">
-          <article class="panel calendar-panel">
-            <div class="panel-head">
-              <div>
-                <p class="eyebrow">Municipal work calendar</p>
-                <h2 id="calendar-title">ปฏิทินงานเทศบาล</h2>
-              </div>
-              <div class="calendar-head-actions">
-                <div class="calendar-assist" aria-label="วิธีใช้ปฏิทิน">
-                  <span class="assist-mascot" aria-hidden="true"><i></i></span>
-                  <span>
-                    <strong>จดงานเทศบาลลงวันที่</strong>
-                    <small>คลิกเพื่อดูงาน ดับเบิ้ลคลิกเพื่อเพิ่ม แล้วให้ AI ช่วยคิดคอนเทนต์ต่อ</small>
-                  </span>
-                </div>
-                <div class="month-controls">
-                  <button class="soft-button today-inline" id="go-today-inline" type="button">วันนี้</button>
-                  <button class="icon-button" id="prev-month" type="button" aria-label="เดือนก่อนหน้า">‹</button>
-                  <button class="icon-button" id="next-month" type="button" aria-label="เดือนถัดไป">›</button>
-                </div>
-              </div>
             </div>
 
             <div class="calendar-toolbar">
@@ -258,7 +210,7 @@
           </article>
           <article>
             <span id="stat-ready">0</span>
-            <p>พร้อมเผยแพร่</p>
+            <p>โพสต์แล้ว</p>
           </article>
         </section>
 
@@ -430,6 +382,8 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="./app.js"></script>
+    <script src="./assets/vendor/three.min.js" defer></script>
+    <script src="./stage3d.js" defer></script>
     <script src="./polish.js" defer></script>
   </body>
 </html>

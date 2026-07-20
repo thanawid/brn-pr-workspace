@@ -21,7 +21,15 @@ const shortMonths = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.
 const weekDays = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
 
 const entryTypes = ["งานเทศบาล", "วันของเทศบาล", "โน้ตทีม", "คอนเทนต์ไอเดีย"];
-const statuses = ["ไอเดีย", "ต้องถ่าย", "กำลังตัด", "รออนุมัติ", "เผยแพร่แล้ว"];
+const statuses = ["📋 รอถ่าย", "🎬 กำลังทำ", "✅ โพสต์แล้ว"];
+const LEGACY_STATUS = {
+  "ไอเดีย": "📋 รอถ่าย",
+  "ต้องถ่าย": "📋 รอถ่าย",
+  "กำลังตัด": "🎬 กำลังทำ",
+  "รออนุมัติ": "🎬 กำลังทำ",
+  "เผยแพร่แล้ว": "✅ โพสต์แล้ว",
+};
+const migrateStatus = (item) => ({ ...item, status: LEGACY_STATUS[item.status] || (statuses.includes(item.status) ? item.status : statuses[0]) });
 
 const pillars = {
   "เมืองสมดุล": {
@@ -244,7 +252,7 @@ const defaultEntries = [
     type: "คอนเทนต์ไอเดีย",
     pillar: "ปลอดภัย",
     channel: "YouTube @BangraknoiNews",
-    status: "ไอเดีย",
+    status: "📋 รอถ่าย",
     note: "เปิดด้วยไฟดับจริง แล้วบอกข้อมูลที่ประชาชนต้องแจ้ง",
   },
   {
@@ -321,11 +329,11 @@ function escapeHtml(value) {
 function loadEntries() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [...defaultEntries];
+    if (!raw) return [...defaultEntries].map(migrateStatus);
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [...defaultEntries];
+    return Array.isArray(parsed) ? parsed.map(migrateStatus) : [...defaultEntries].map(migrateStatus);
   } catch {
-    return [...defaultEntries];
+    return [...defaultEntries].map(migrateStatus);
   }
 }
 
@@ -616,7 +624,7 @@ function renderStats() {
   document.getElementById("stat-events").textContent = items.filter((item) => item.source === "event").length;
   document.getElementById("stat-buddhist").textContent = items.filter((item) => item.source === "buddhist").length;
   document.getElementById("stat-work").textContent = items.filter((item) => item.source === "user").length;
-  document.getElementById("stat-ready").textContent = entries.filter((item) => item.date.includes(`-${String(activeMonth + 1).padStart(2, "0")}-`) && item.status === "เผยแพร่แล้ว").length;
+  document.getElementById("stat-ready").textContent = entries.filter((item) => item.date.includes(`-${String(activeMonth + 1).padStart(2, "0")}-`) && item.status === "✅ โพสต์แล้ว").length;
 }
 
 function startOfWeek(date) {
@@ -898,7 +906,7 @@ async function entryFromForm(form, date = selectedDate) {
     type: formValue(data, "type", "งานเทศบาล"),
     pillar: formValue(data, "pillar", "เมืองสมดุล"),
     channel: formValue(data, "channel", "Facebook"),
-    status: formValue(data, "status", "ไอเดีย"),
+    status: formValue(data, "status", "📋 รอถ่าย"),
     note: noteParts.join(" | "),
     image,
   };
@@ -929,7 +937,7 @@ function addIdeaToDate(ideaIndex, iso) {
     type: "คอนเทนต์ไอเดีย",
     pillar: item.pillar,
     channel: "Facebook",
-    status: "ไอเดีย",
+    status: "📋 รอถ่าย",
     note: `${item.format}: ${item.note}`,
     image: "",
   });
