@@ -240,3 +240,32 @@ body::before{
 /* บอร์ด 3 ขั้น: คอลัมน์กว้างขึ้น อ่านสบาย */
 .board-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))!important}
 @media (prefers-reduced-motion:reduce){.mascot-hero,.badge-mini,.onair i{animation:none}}
+
+/* ============================================================
+   READABLE HERO PACK — ตัวหนังสือบนเวทีต้องอ่านออก
+   ============================================================ */
+/* ม่านสลัวไล่จากซ้าย คั่นระหว่างอนุภาค 3D กับข้อความ */
+.creator-stage::after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(92deg,rgba(22,8,40,.78) 0%,rgba(22,8,40,.45) 38%,rgba(22,8,40,.08) 62%,transparent 78%);
+}
+/* หัวเรื่อง: สว่างทึบขึ้น แสงกระชับขึ้น */
+.stage-copy h1{
+  background:linear-gradient(180deg,#ffffff 30%,#ffe6c4 100%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  text-shadow:0 2px 22px rgba(167,139,250,.45)!important;
+}
+/* คำบรรยาย: หนาขึ้น ขาวขึ้น มีเงาหนุน อ่านสบาย */
+.stage-copy p{
+  color:#F4EEFF!important;font-weight:500!important;
+  font-size:clamp(15px,1.6vw,19.5px)!important;line-height:1.85!important;
+  text-shadow:0 1px 10px rgba(10,2,24,.65)!important;max-width:640px!important;
+}
+.stage-copy .eyebrow{color:#FFDf9e!important;font-weight:600!important;
+  text-shadow:0 1px 8px rgba(10,2,24,.6)!important}
+
+/* มาสคอตใหม่: เงานุ่มใต้เท้าด้วย CSS (ไฟล์ไม่มีเงาติดมาแล้ว) */
+.mascot-hero{
+  filter:drop-shadow(0 30px 34px rgba(8,2,20,.55)) drop-shadow(0 0 26px rgba(167,139,250,.3))!important;
+}

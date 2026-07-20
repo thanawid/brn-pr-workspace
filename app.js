@@ -469,6 +469,19 @@ function adviceForDate(iso) {
   };
 }
 
+function shortTitle(title = "") {
+  let t = String(title).split(" / ")[0].trim();
+  const map = {
+    "วันเฉลิมพระชนมพรรษาพระบาทสมเด็จพระเจ้าอยู่หัว": "วันเฉลิมฯ ร.10",
+    "วันเฉลิมพระชนมพรรษาสมเด็จพระนางเจ้าฯ พระบรมราชินี": "วันเฉลิมฯ พระราชินี",
+    "วันสถาปนาลูกเสือแห่งชาติ": "วันสถาปนาลูกเสือฯ",
+    "วันคล้ายวันสวรรคตพระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร": "วันนวมินทรมหาราช",
+  };
+  if (map[t]) return map[t];
+  if (t.length > 24) t = t.slice(0, 22).trim() + "ฯ";
+  return t;
+}
+
 function itemClass(item) {
   if (item.source === "buddhist") return "buddhist";
   if (item.source === "user") return item.type === "โน้ตทีม" ? "note" : item.type === "วันของเทศบาล" ? "custom" : "work";
@@ -548,7 +561,7 @@ function renderCalendar() {
           <span>${date.getDate()}</span>
           ${iso === todayIso ? '<span class="today-tag">วันนี้</span>' : ""}
         </span>
-        ${visible.map((item) => `<span class="event-pill ${itemClass(item)}">${escapeHtml(item.title)}</span>`).join("")}
+        ${visible.map((item) => `<span class="event-pill ${itemClass(item)}" title="${escapeHtml(item.title)}">${escapeHtml(shortTitle(item.title))}</span>`).join("")}
         ${hidden ? `<span class="event-pill more">+${hidden} รายการ</span>` : ""}
       </button>
     `);
