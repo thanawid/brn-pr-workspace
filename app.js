@@ -1,6 +1,9 @@
 (() => {
   'use strict';
 
+  if (window.__BRN_APP_STARTED__) return;
+  window.__BRN_APP_STARTED__ = true;
+
   const config = window.BRN_AUTH_CONFIG?.firebaseConfig;
   const $ = (id) => document.getElementById(id);
   const state = {
@@ -267,5 +270,19 @@
   document.querySelectorAll('.guide-more').forEach(btn => btn.addEventListener('click', () => { document.getElementById('guides').scrollIntoView({behavior:'smooth'}); showToast('แนวทางนี้ปรับตามงานในวันที่เลือก'); }));
 
   state.cursor = new Date(); state.cursor.setDate(1); state.selectedDate = new Date();
-  state.events = localEvents(); renderCalendar(); renderGuides(); renderIdeas(); initCloud();
+  state.events = localEvents();
+  renderCalendar();
+  renderGuides();
+  renderIdeas();
+  els.syncStatus.textContent = 'พร้อมใช้งาน กำลังเชื่อมข้อมูลทีม…';
+
+  let cloudStarted = false;
+  const startCloud = () => {
+    if (cloudStarted) return;
+    cloudStarted = true;
+    initCloud();
+  };
+
+  if (window.BRN_CURRENT_USER) startCloud();
+  else document.addEventListener('brn-auth-ready', startCloud, { once: true });
 })();
