@@ -1,9 +1,0 @@
-{
-  "name": "brn-pr-workspace",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Thai PR content calendar for Bangraknoi municipal communication team",
-  "scripts": {
-    "start": "node server.mjs"
-  }
-}
