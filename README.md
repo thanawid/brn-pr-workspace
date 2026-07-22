@@ -1,11 +1,20 @@
-# BRN PR Board
+# BRN PR Board V1.0
 
-Frontend refresh package with the existing Firebase/Auth/Firestore/LINE backend contract preserved.
+เครื่องมือบริหารงานประชาสัมพันธ์ โดยใช้ “งานในปฏิทิน” เป็นศูนย์กลาง และให้ AI ช่วยวิเคราะห์จากข้อมูลงานจริง
 
-Changes in this package:
-- Colored branded header and cleaner gradient background
-- Live Thai Buddhist date and Bangkok time
-- Start/end time fields and all-day events, with backward compatibility for the existing `time` field
-- Dedicated detailed working-guides page
-- More colorful guide cards
-- Copyright footer for Thanawid Sangsakol
+## ที่มาของระบบ
+1. ผู้ใช้เพิ่มงานลงปฏิทินด้วยฟอร์มเดิม
+2. ระบุเจ้าของงานในระดับกอง/สำนัก
+3. บันทึกและแจ้งทีมผ่าน LINE ตามระบบเดิม
+4. AI อ่านชื่องาน รายละเอียด ประเภทงาน วันสำคัญ และวันพระ
+5. AI แนะนำสิ่งที่ต้องเตรียม แนวภาพ คลิป คอนเทนต์ และแผนประจำเดือน
+
+## ฐานการพัฒนา
+V1.0 นี้ต่อยอดจากฐานเดิม V1.6 โดยรีเซ็ตเลขเวอร์ชันใหม่ ไม่ได้เขียนระบบใหม่
+
+## Backend ที่คงเดิม
+- Firebase Authentication
+- Firestore collections เดิม
+- Cloud Functions เดิม
+- LINE Messaging / lineOutbox เดิม
+- Eventarc เดิม
