@@ -93,18 +93,42 @@ function displayNameFor(user) {
 
 function initials(name, email) {
   const source = String(name || email || "BRN").trim();
-  return source.slice(0, 2).toUpperCase();
+  const username = normalizeUsername(String(email || "").split("@")[0]);
+  if (/^pr\d+/.test(username)) return username.replace(/^pr/, "PR ");
+  const ascii = source.match(/[A-Za-z0-9]+/g)?.join("").slice(0, 2);
+  return (ascii || source.slice(0, 2)).toUpperCase();
+}
+
+function escapeSvgText(value) {
+  return String(value || "PR").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[char]));
 }
 
 function avatarDataUri(label) {
-  const text = encodeURIComponent(label);
+  const text = escapeSvgText(label);
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#51247a"/><stop offset="1" stop-color="#ff6f22"/></linearGradient></defs><rect width="96" height="96" rx="48" fill="url(#g)"/><text x="48" y="57" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" font-weight="700" fill="white">${text}</text></svg>`;
-  return `data:image/svg+xml;charset=UTF-8,${svg}`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
 function photoFor(user) {
   const name = displayNameFor(user);
-  return user?.photoURL || avatarDataUri(initials(name, user?.email));
+  return String(user?.photoURL || "").trim() || avatarDataUri(initials(name, user?.email));
+}
+
+function setAvatarImage(img, user, name = displayNameFor(user)) {
+  if (!img) return;
+  const fallback = avatarDataUri(initials(name, user?.email));
+  img.onerror = () => {
+    img.onerror = null;
+    img.src = fallback;
+  };
+  img.alt = "";
+  img.src = photoFor(user);
 }
 
 function unlockStaffField(event) {
@@ -189,18 +213,15 @@ function showBlocked(user) {
   retryButton.hidden = true;
   statusBox.hidden = true;
   blockedBox.hidden = false;
-  blockedPhoto.src = photoFor(user);
-  blockedPhoto.alt = `รูปของ ${displayNameFor(user)}`;
+  setAvatarImage(blockedPhoto, user);
   blockedName.textContent = "บัญชีนี้ยังไม่ได้รับอนุญาต";
   blockedEmail.textContent = "กรุณาใช้บัญชีที่ผู้ดูแลระบบอนุญาต";
 }
 
 function updateAccountUi(user, role) {
   const name = displayNameFor(user);
-  const photo = photoFor(user);
   const roleLabel = role === "admin" ? "ผู้ดูแลระบบ" : "เจ้าหน้าที่ประชาสัมพันธ์";
-  accountPhoto.src = photo;
-  accountPhoto.alt = `รูปของ ${name}`;
+  setAvatarImage(accountPhoto, user, name);
   accountName.textContent = name;
   accountRole.textContent = roleLabel;
   accountMenuName.textContent = name;
@@ -223,7 +244,7 @@ async function loadWorkspace() {
   if (workspaceLoaded) return;
   workspaceLoaded = true;
   if (window.__BRN_APP_STARTED__) return;
-  await loadScript('./app.js?v=1.0.0');
+  await loadScript('./app.js?v=1.0.1');
 }
 
 async function showWorkspace(user, role) {
