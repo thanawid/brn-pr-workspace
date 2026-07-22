@@ -45,7 +45,7 @@ footer{padding:18px 20px 28px;color:#9a94a1;font-size:14px}
 @media(max-width:640px){.site-header{height:68px}.brand strong{font-size:18px}.calendar-wrap{margin-top:12px;padding:14px 12px}.calendar-top{align-items:flex-start}.month-nav h1{font-size:27px}.round{width:38px;height:38px}.actions{margin-left:auto}.filter-row{font-size:11px}.guide-grid{grid-template-columns:1fr}.guide-card{min-height:210px}.guide-image{width:112px;height:135px}.important-days{grid-template-columns:1fr}.calendar-frame{overflow-x:auto}.weekdays,.calendar-grid{min-width:760px}}
 .toast{bottom:-90px;transform:translate(-50%,0);opacity:0;pointer-events:none}.toast.show{bottom:26px;opacity:1}
 
-/* V1.4 atmosphere, typography polish, and motion */
+/* Atmosphere, typography polish, and motion */
 body{position:relative;isolation:isolate;background:
   linear-gradient(rgba(248,247,250,.91),rgba(248,247,250,.94)),
   url('./assets/ambient-media.svg') center top/cover fixed no-repeat,
@@ -74,7 +74,7 @@ body{position:relative;isolation:isolate;background:
 @media(max-width:640px){body{background-attachment:scroll}.ambient{display:none!important}.guide-copy{max-width:calc(100% - 96px)}.guide-card ul{font-size:13px}.guide-image{clip-path:none}.site-header nav{overflow-x:auto;max-width:52vw;scrollbar-width:none}.site-header nav::-webkit-scrollbar{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}.ambient{display:none!important}}
 
-/* V1.5 visual refresh */
+/* Visual refresh */
 body{background:
   radial-gradient(circle at 8% 0%,rgba(125,73,190,.17),transparent 30%),
   radial-gradient(circle at 92% 14%,rgba(255,188,133,.20),transparent 27%),
@@ -95,14 +95,14 @@ body{background:
 @media(max-width:640px){.live-datetime{font-size:12px;gap:6px}.live-datetime time{width:100%;border-left:0;padding-left:0}.site-header{background:linear-gradient(110deg,#57227d,#7d3ca9)!important}.guides-page-hero h1{font-size:34px}.guide-detail-card{padding:20px}.guide-detail-heading h2{font-size:24px}}
 
 
-/* V1.0 new foundation from V1.6 */
+/* Work-first foundation */
 body{background-image:linear-gradient(rgba(247,243,251,.88),rgba(250,247,252,.93)),url('./assets/ambient-media.svg')!important;background-position:center top!important;background-size:cover!important;background-repeat:no-repeat!important;background-attachment:fixed!important}
 .ai-context-summary{display:flex;align-items:flex-start;gap:14px;margin:18px 0 4px;padding:15px 17px;border:1px solid #dccff0;border-radius:17px;background:linear-gradient(135deg,#f6efff,#fff9f2);box-shadow:0 10px 24px rgba(68,33,91,.07)}
 .ai-context-summary .ai-badge{flex:0 0 auto;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,#6f32a0,#8b52c4);color:white;font-size:12px;font-weight:700;white-space:nowrap}.ai-context-summary .ai-badge.muted{background:#e7e0eb;color:#756c80}.ai-context-summary strong{display:block;color:var(--purple);font-size:17px}.ai-context-summary p{margin:3px 0 0;color:var(--muted);line-height:1.55}
 .chip b{font-variant-numeric:tabular-nums}.chip.holiday,.chip.buddhist{order:9}
 @media(max-width:640px){.ai-context-summary{display:grid;gap:8px}.ai-context-summary .ai-badge{justify-self:start}body{background-attachment:scroll!important}}
 
-/* BRN PR Board V1.0 — event-centered AI workspace */
+/* BRN PR Board — event-centered work guidance */
 .assistant-hero{background:linear-gradient(125deg,#57227d,#7637a1 58%,#c37b42)}
 .assistant-context{display:flex;align-items:flex-start;gap:14px;margin:18px 0;padding:18px 20px;border:1px solid #e5dcef;border-radius:18px;background:rgba(255,255,255,.94);box-shadow:var(--shadow-soft)}
 .assistant-context strong{display:block;color:var(--purple);font-size:18px}.assistant-context p{margin:4px 0 0;color:var(--muted);line-height:1.65}
