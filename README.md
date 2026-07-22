@@ -1,5 +1,11 @@
 # BRN PR Board
 
-Frontend refreshed to follow the approved calendar-first visual reference while preserving the existing Firebase Authentication, Firestore (`prEvents`), and LINE outbox (`lineOutbox`) integration.
+Frontend refresh package with the existing Firebase/Auth/Firestore/LINE backend contract preserved.
 
-Upload all files in this folder to the repository root.
+Changes in this package:
+- Colored branded header and cleaner gradient background
+- Live Thai Buddhist date and Bangkok time
+- Start/end time fields and all-day events, with backward compatibility for the existing `time` field
+- Dedicated detailed working-guides page
+- More colorful guide cards
+- Copyright footer for Thanawid Sangsakol
