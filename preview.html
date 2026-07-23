@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=1.2.1">
+  <link rel="stylesheet" href="./styles.css?v=1.2.2">
 </head>
 <body>
   <div id="auth-gate" class="auth-gate" hidden>
@@ -48,16 +48,15 @@
       <nav aria-label="เมนูหลัก">
         <a id="nav-dashboard" class="active" href="#dashboard">ภาพรวม</a>
         <a id="nav-calendar" href="#calendar">ปฏิทิน</a>
-        <button id="nav-request-work" class="nav-request" type="button">แจ้งงาน</button>
         <button id="nav-team-work" type="button">งานของทีม</button>
       </nav>
       <div id="account-area" class="account-area" hidden>
         <button id="account-button" class="account-button" type="button" aria-expanded="false"><img id="account-photo" alt=""><span><strong id="account-name"></strong><small id="account-role"></small></span><b>⌄</b></button>
-        <div id="account-menu" class="account-menu" hidden><strong id="account-menu-name"></strong><span id="account-email"></span><button id="signout-button" type="button">ออกจากระบบ</button></div>
+        <div id="account-menu" class="account-menu" hidden><strong id="account-menu-name"></strong><span id="account-email"></span><button id="print-request-form-button" class="menu-tool" type="button">พิมพ์แบบแจ้งงาน</button><button id="signout-button" type="button">ออกจากระบบ</button></div>
       </div>
     </header>
 
-    <section id="dashboard" class="dashboard-shell" data-app-view="dashboard">
+    <section id="dashboard" class="dashboard-shell">
       <div class="today-command">
         <div class="today-copy">
           <span class="eyebrow">ศูนย์งานประชาสัมพันธ์วันนี้</span>
@@ -65,11 +64,7 @@
           <p id="today-summary">ระบบกำลังจัดลำดับงานและตรวจความพร้อมให้ทีม</p>
           <div id="live-datetime" class="live-datetime"><strong id="live-date-text"></strong><time id="live-time-text"></time></div>
         </div>
-        <div class="hero-media-stack" aria-hidden="true">
-          <figure class="hero-media-card media-camera"><img src="./assets/guide-camera-clean.png" alt=""><span>ภาพนิ่ง</span></figure>
-          <figure class="hero-media-card media-video"><img src="./assets/guide-video-clean.png" alt=""><span>วิดีโอ</span></figure>
-          <figure class="hero-media-card media-phone"><img src="./assets/guide-phone-clean.png" alt=""><span>เผยแพร่</span></figure>
-        </div>
+        <div class="hero-visual-wrap" aria-hidden="true"><img class="hero-main-visual" src="./assets/guide-camera-clean.png" alt=""></div>
         <div id="next-event-card" class="next-event-card" aria-live="polite"></div>
       </div>
 
@@ -80,27 +75,12 @@
         <button class="metric-card pending" data-metric="publish" type="button"><span class="metric-icon">□</span><small>รอเผยแพร่</small><strong id="metric-publish">0</strong><em>งาน</em></button>
       </div>
 
-      <section class="focus-board" aria-labelledby="focus-title">
-        <div class="section-head compact">
-          <div><span>สิ่งที่ต้องจับตา</span><h2 id="focus-title">งานใกล้ถึงที่ควรเตรียม</h2></div>
-          <div class="focus-head-actions">
-            <button id="focus-all-button" class="btn ghost" type="button">ดูงานทั้งหมด</button>
-            <button id="request-work-top" class="btn soft" type="button">แจ้งงานให้ PR</button>
-            <button id="add-event-top" class="btn primary" type="button">＋ เพิ่มงาน</button>
-          </div>
-        </div>
-        <div id="focus-overdue-summary" class="focus-overdue-summary" hidden></div>
-        <div id="focus-list" class="focus-list"></div>
-      </section>
-    </section>
-
-    <section id="calendar" class="calendar-wrap" data-app-view="calendar" hidden>
+    <section id="calendar" class="calendar-wrap">
       <div class="calendar-top">
         <div class="month-nav"><button id="prev-month" class="round" type="button" aria-label="เดือนก่อน">‹</button><div><span>ปฏิทินงานของทีม</span><h2 id="month-title"></h2></div><button id="next-month" class="round" type="button" aria-label="เดือนถัดไป">›</button></div>
         <div class="actions">
           <div class="toolbox"><label class="search-box" aria-label="ค้นหางาน"><span>⌕</span><input id="event-search" type="search" placeholder="ค้นหางาน สถานที่ หรือกองงาน"></label><select id="event-filter" aria-label="กรองประเภทงาน"><option value="all">ทุกประเภท</option><option value="meeting">ประชุม / อบรม</option><option value="activity">กิจกรรม</option><option value="media">ถ่ายทำ / สื่อ</option><option value="other">อื่น ๆ</option></select><select id="status-filter" aria-label="กรองสถานะ"><option value="all">ทุกสถานะ</option><option value="waiting_info">รอข้อมูล</option><option value="confirmed">ยืนยันแล้ว</option><option value="preparing">กำลังเตรียมสื่อ</option><option value="ready">พร้อมปฏิบัติงาน</option><option value="waiting_publish">รอเผยแพร่</option><option value="published">เผยแพร่แล้ว</option><option value="completed">เสร็จสิ้น</option></select></div>
           <button id="today-button" class="btn ghost" type="button">วันนี้</button>
-          <button id="request-work-calendar" class="btn soft" type="button">แจ้งงาน</button>
           <button id="add-event-button" class="btn primary" type="button">＋ เพิ่มงาน</button>
         </div>
       </div>
@@ -113,6 +93,18 @@
       <div class="legend"><span><i class="meeting"></i>ประชุม/อบรม</span><span><i class="activity"></i>กิจกรรม</span><span><i class="media"></i>ถ่ายทำ/สื่อ</span><span><i class="holiday"></i>วันสำคัญ</span><span><i class="buddhist"></i>วันพระ</span></div>
     </section>
 
+      <section class="focus-board" aria-labelledby="focus-title">
+        <div class="section-head compact">
+          <div><span>สิ่งที่ต้องจับตา</span><h2 id="focus-title">งานใกล้ถึงที่ควรเตรียม</h2></div>
+          <div class="focus-head-actions">
+            <button id="focus-all-button" class="btn ghost" type="button">ดูงานทั้งหมด</button>
+            <button id="add-event-top" class="btn primary" type="button">＋ เพิ่มงาน</button>
+          </div>
+        </div>
+        <div id="focus-overdue-summary" class="focus-overdue-summary" hidden></div>
+        <div id="focus-list" class="focus-list"></div>
+      </section>
+    </section>
     <section id="work-assistant" class="work-assistant" hidden>
       <div class="assistant-summary">
         <div><span>ระบบสนับสนุนหลังฉาก</span><h2 id="assistant-title">แผนเตรียมงานพร้อมแล้ว</h2><p id="assistant-summary-text"></p></div>
@@ -121,7 +113,7 @@
       <div id="assistant-alerts" class="assistant-alerts"></div>
     </section>
 
-    <section id="important-section" class="important" data-app-view="dashboard">
+    <section id="important-section" class="important">
       <div class="important-intro"><span>มองล่วงหน้า</span><h2>วันสำคัญที่ใกล้ถึง</h2><p>ระบบคัดเฉพาะวันที่ควรเริ่มเตรียมภาพ คลิป หรือข้อความล่วงหน้า</p><img class="important-visual" src="./assets/guide-calendar-clean.png" alt="" aria-hidden="true"></div>
       <div id="important-days" class="important-days"></div>
     </section>
@@ -132,37 +124,6 @@
       <small class="copyright">© 2569 งานประชาสัมพันธ์ เทศบาลเมืองบางรักน้อย สงวนลิขสิทธิ์</small>
     </footer>
   </main>
-
-  <dialog id="request-dialog">
-    <form id="request-form" class="modal request-modal">
-      <header><div><span>กรอกเท่าที่ทราบ ระบบจะจัดลงปฏิทินให้ทันที</span><h2>แบบแจ้งงานประชาสัมพันธ์</h2></div><button type="button" data-close>×</button></header>
-      <div class="request-intro"><img src="./assets/guide-camera-clean.png" alt="กล้องถ่ายภาพ"><div><strong>แจ้งรายละเอียดงานให้ทีมประชาสัมพันธ์</strong><p>ไม่ต้องทำบันทึกหลายขั้นตอน กรอกข้อมูลสำคัญแล้วกดส่งได้เลย ทีม PR ยังแก้ไขและเติมข้อมูลภายหลังได้</p></div></div>
-      <div class="form-grid">
-        <label class="wide">ชื่องาน / กิจกรรม *<input id="request-title" required placeholder="เช่น โครงการอบรม หรือกิจกรรมชุมชน"></label>
-        <label>วันที่ *<input id="request-date" type="date" required></label>
-        <label>เวลาเริ่ม<input id="request-time" type="time"></label>
-        <label class="wide">สถานที่<input id="request-location" placeholder="ระบุสถานที่หรือจุดนัดหมาย"></label>
-        <label>กอง / สำนักผู้แจ้ง<input id="request-owner" placeholder="เช่น กองสาธารณสุขฯ"></label>
-        <label>ผู้ประสานงาน<input id="request-contact-name"></label>
-        <label>เบอร์ติดต่อ<input id="request-contact-phone" inputmode="tel"></label>
-        <label class="wide">รายละเอียดงานโดยย่อ<textarea id="request-description" rows="3" placeholder="วัตถุประสงค์ กำหนดการ หรือข้อมูลที่ทีม PR ควรทราบ"></textarea></label>
-        <fieldset class="wide output-fieldset request-task-fieldset"><legend>ต้องการให้ประชาสัมพันธ์ช่วยด้านใด</legend><div class="output-grid request-task-grid">
-          <label><input type="checkbox" name="requestPrTasks" value="photo"> ถ่ายภาพนิ่ง</label>
-          <label><input type="checkbox" name="requestPrTasks" value="video"> ถ่ายวิดีโอ</label>
-          <label><input type="checkbox" name="requestPrTasks" value="mc"> เป็นพิธีกร</label>
-          <label><input type="checkbox" name="requestPrTasks" value="live"> ถ่ายทอดสด</label>
-          <label><input type="checkbox" name="requestPrTasks" value="write_news"> เขียนข่าวประชาสัมพันธ์</label>
-          <label><input type="checkbox" name="requestPrTasks" value="facebook"> เผยแพร่ Facebook</label>
-          <label><input type="checkbox" name="requestPrTasks" value="poster"> จัดทำโปสเตอร์</label>
-          <label><input type="checkbox" name="requestPrTasks" value="reel"> จัดทำ Reel / คลิปสั้น</label>
-          <label><input type="checkbox" name="requestPrTasks" value="other"> งานอื่น ๆ</label>
-        </div></fieldset>
-        <label id="request-other-wrap" class="wide" hidden>งานอื่น ๆ ที่ต้องการ<input id="request-other" placeholder="ระบุเพิ่มเติม"></label>
-      </div>
-      <footer><span></span><button class="btn ghost" type="button" data-close>ยกเลิก</button><button class="btn primary" type="submit">ส่งแจ้งงาน</button></footer>
-    </form>
-  </dialog>
-
   <dialog id="event-dialog">
     <form id="event-form" class="modal event-modal">
       <header><div><span id="event-kicker">จัดงานในปฏิทิน</span><h2 id="event-heading">เพิ่มงานใหม่</h2></div><button type="button" data-close>×</button></header>
@@ -229,7 +190,7 @@
       {id:'demo-4',title:'โครงการร่วมกิจกรรมร่วมใจเพื่อผู้สูงวัยบางรักน้อย',description:'สรุปข่าวและอัลบั้มภาพหลังจบกิจกรรม',date:'2026-07-14',startTime:'08:30',location:'ลานอเนกประสงค์ เทศบาลเมืองบางรักน้อย',owner:'กองสวัสดิการสังคม',category:'activity',status:'waiting_publish',contactName:'กองสวัสดิการสังคม',contactPhone:'02-193-4512',chairperson:'นายสุชาติ แก้วประดิษฐ์',outputs:['news','album','video'],prTasks:['photo','video','write_news','facebook'],prSummary:'บันทึกภาพกิจกรรม จัดทำข่าวพร้อมอัลบั้มภาพ และเผยแพร่ประชาสัมพันธ์เรียบร้อยแล้ว',notifyLine:false}
     ]));
   </script>
-  <script src="./calendar-data.js?v=1.2.1"></script>
-  <script src="./app.js?v=1.2.1"></script>
+  <script src="./calendar-data.js?v=1.2.2"></script>
+  <script src="./app.js?v=1.2.2"></script>
 </body>
 </html>

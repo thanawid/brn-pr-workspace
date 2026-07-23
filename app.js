@@ -270,31 +270,21 @@
     }, duration);
   }
 
-
   function setMainView(view, options = {}) {
     const nextView = view === 'calendar' ? 'calendar' : 'dashboard';
     state.mainView = nextView;
-    const dashboard = $('dashboard');
-    const calendar = $('calendar');
-    const important = $('important-section');
-    if (dashboard) dashboard.hidden = nextView !== 'dashboard';
-    if (calendar) calendar.hidden = nextView !== 'calendar';
-    if (important) important.hidden = nextView !== 'dashboard';
     $('nav-dashboard')?.classList.toggle('active', nextView === 'dashboard');
     $('nav-calendar')?.classList.toggle('active', nextView === 'calendar');
     if ($('nav-dashboard')) nextView === 'dashboard' ? $('nav-dashboard').setAttribute('aria-current', 'page') : $('nav-dashboard').removeAttribute('aria-current');
     if ($('nav-calendar')) nextView === 'calendar' ? $('nav-calendar').setAttribute('aria-current', 'page') : $('nav-calendar').removeAttribute('aria-current');
-    const activeSection = nextView === 'calendar' ? calendar : dashboard;
-    if (activeSection) {
-      activeSection.classList.remove('view-enter');
-      requestAnimationFrame(() => activeSection.classList.add('view-enter'));
-      setTimeout(() => activeSection.classList.remove('view-enter'), 520);
-    }
     if (options.updateHash !== false) {
       const targetHash = `#${nextView}`;
       if (location.hash !== targetHash) history.pushState({ brnView: nextView }, '', targetHash);
     }
-    if (options.scroll !== false) window.scrollTo({ top: 0, behavior: options.instant ? 'auto' : 'smooth' });
+    if (options.scroll !== false) {
+      const target = nextView === 'calendar' ? $('calendar') : $('dashboard');
+      target?.scrollIntoView({ behavior: options.instant ? 'auto' : 'smooth', block: 'start' });
+    }
   }
 
   function renderAll() {
@@ -448,70 +438,6 @@
     $('day-dialog').showModal();
   }
 
-  function openRequestForm() {
-    $('request-form').reset();
-    $('request-date').value = iso(state.selectedDate || new Date());
-    $('request-other-wrap').hidden = true;
-    $('request-dialog').showModal();
-    setTimeout(() => $('request-title').focus(), 80);
-  }
-
-  function inferRequestCategory(title, description, tasks) {
-    const text = `${title} ${description}`.toLowerCase();
-    if (/ประชุม|อบรม|สัมมนา|ประชาคม|สภา/.test(text)) return 'meeting';
-    if (tasks.includes('video') || tasks.includes('reel') || /ถ่ายทำ|คลิป|วิดีโอ|สื่อ/.test(text)) return 'media';
-    if (/กิจกรรม|โครงการ|รณรงค์|ทำความสะอาด|ลงพื้นที่|พิธี/.test(text)) return 'activity';
-    return 'other';
-  }
-
-  function outputsFromTasks(tasks) {
-    const outputs = [];
-    if (tasks.includes('photo')) outputs.push('album');
-    if (tasks.includes('video')) outputs.push('video');
-    if (tasks.includes('live')) outputs.push('live');
-    if (tasks.includes('write_news') || tasks.includes('facebook')) outputs.push('news');
-    if (tasks.includes('poster')) outputs.push('poster');
-    if (tasks.includes('reel')) outputs.push('reel');
-    return [...new Set(outputs)];
-  }
-
-  function getRequestFormData() {
-    const current = window.BRN_CURRENT_USER || {};
-    const tasks = qsa('input[name="requestPrTasks"]:checked', $('request-form')).map((input) => input.value);
-    const title = $('request-title').value.trim();
-    const description = $('request-description').value.trim();
-    return normalizeEvent({
-      title, description, date: $('request-date').value,
-      status: 'waiting_info', startTime: $('request-time').value, endTime: '', allDay: false,
-      location: $('request-location').value.trim(), owner: $('request-owner').value.trim(),
-      category: inferRequestCategory(title, description, tasks),
-      contactName: $('request-contact-name').value.trim(), contactPhone: $('request-contact-phone').value.trim(),
-      chairperson: '', outputs: outputsFromTasks(tasks), prTasks: tasks,
-      prTasksOther: tasks.includes('other') ? $('request-other').value.trim() : '',
-      prSummary: '', publicationLinks: '', notifyLine: true, reminderEnabled: true,
-      reminderPolicy: 'default', reminderTimezone: 'Asia/Bangkok',
-      reminders: [{ type: 'day_before', daysBefore: 1, time: '08:00' }, { type: 'event_morning', daysBefore: 0, time: '07:00' }],
-      requestSource: 'request_form',
-      updatedBy: current.email || current.displayName || $('request-contact-name').value.trim() || 'request-form',
-    });
-  }
-
-  async function saveRequestedEvent(payload) {
-    let savedId;
-    if (state.cloud) {
-      const ref = await state.fs.addDoc(state.fs.collection(state.db, 'prEvents'), { ...payload, createdAt: state.fs.serverTimestamp(), updatedAt: state.fs.serverTimestamp() });
-      savedId = ref.id;
-    } else {
-      savedId = `local-${Date.now()}`;
-      state.events.push({ ...payload, id: savedId });
-      saveLocal();
-      renderAll();
-    }
-    state.selectedEventId = savedId;
-    state.selectedDate = parseDate(payload.date);
-    return savedId;
-  }
-
   function openEvent(dateKey = iso(state.selectedDate), event = null) {
     state.editingId = event?.id || null;
     $('event-heading').textContent = event ? 'แก้ไขข้อมูลงาน' : 'เพิ่มงานใหม่';
@@ -650,7 +576,7 @@
     const r = readiness(event);
     $('detail-category').textContent = CATEGORIES[event.category] || 'งานประชาสัมพันธ์';
     $('detail-title').textContent = event.title;
-    $('detail-status-row').innerHTML = `${statusPill(event)}${readinessPill(event)}<span class="category-pill">${esc(CATEGORIES[event.category] || 'อื่น ๆ')}</span>${event.requestSource === 'request_form' ? '<span class="request-source-pill">แจ้งผ่านแบบฟอร์ม</span>' : ''}`;
+    $('detail-status-row').innerHTML = `${statusPill(event)}${readinessPill(event)}<span class="category-pill">${esc(CATEGORIES[event.category] || 'อื่น ๆ')}</span>`;
     const meta = [
       ['วันที่', thaiDate(event.date)], ['เวลา', displayTime(event)], ['สถานที่', event.location || 'ยังไม่ระบุ'], ['กอง/สำนัก', event.owner || 'ยังไม่ระบุ'], ['ผู้ประสานงาน', event.contactName || 'ยังไม่ระบุ'], ['เบอร์ติดต่อ', event.contactPhone || 'ยังไม่ระบุ'], ['ประธาน/ผู้กล่าวเปิด', event.chairperson || 'ยังไม่ระบุ'], ['สถานะ', STATUSES[event.status] || 'รอข้อมูล'],
     ];
@@ -766,9 +692,6 @@
     const tasks = prTaskLabels(event);
     const outputs = outputLabels(event);
     const links = String(event.publicationLinks || '').split(/\n+/).map((item) => item.trim()).filter(Boolean);
-    const current = window.BRN_CURRENT_USER || {};
-    const recorderCandidates = [current.displayName, event.recordedBy, event.updatedBy].filter(Boolean).map((value) => String(value).trim());
-    const recorder = recorderCandidates.find((value) => !/@/.test(value) && !/^เจ้าหน้าที่\s*PR\s*\d+$/i.test(value) && !/^PR\s*\d+$/i.test(value) && value !== 'unknown' && value !== 'request-form') || '';
     const summary = event.prSummary || autoPrSummary(event);
     const taskHtml = (tasks.length ? tasks : ['ยังไม่ได้ระบุ']).map((label) => `<span class="task"><b>✓</b>${esc(label)}</span>`).join('');
     const outputHtml = (outputs.length ? outputs : ['ยังไม่ได้ระบุ']).map((label) => `<span class="output">${esc(label)}</span>`).join('');
@@ -784,8 +707,40 @@
       <section class="section"><h3>งานประชาสัมพันธ์ที่ดำเนินการ</h3><div class="tasks">${taskHtml}</div></section>
       <section class="section"><h3>สรุปการปฏิบัติงาน</h3><div class="summary">${esc(summary)}</div></section>
       <section class="section result-grid"><div class="result-box"><h3>ผลงานที่จัดทำ</h3><div class="outputs">${outputHtml}</div></div><div class="result-box"><h3>ช่องทางเผยแพร่ / ลิงก์ผลงาน</h3>${linksHtml}</div></section>
-      <section class="signatures"><div class="sign"><strong>${recorder ? esc(recorder) : '&nbsp;'}</strong><small>ผู้บันทึก / ผู้ปฏิบัติงานประชาสัมพันธ์</small></div><div class="sign"><strong>${esc(thaiDate(new Date(), false))}</strong><small>วันที่บันทึก</small></div></section>
+      <section class="signatures"><div class="sign"><strong>&nbsp;</strong><small>ผู้บันทึก / ผู้ปฏิบัติงานประชาสัมพันธ์</small></div><div class="sign"><strong>${esc(thaiDate(new Date(), false))}</strong><small>วันที่บันทึก</small></div></section>
       <div class="footer-note">จัดทำจาก BRN PR Board · งานประชาสัมพันธ์ เทศบาลเมืองบางรักน้อย</div></main><button class="no-print" onclick="window.print()">พิมพ์ / บันทึก PDF</button></body></html>`);
+    const launchPrint = () => {
+      if (popup.__brnPrintStarted) return;
+      popup.__brnPrintStarted = true;
+      setTimeout(() => { if (!popup.closed) { popup.focus(); popup.print(); } }, 450);
+    };
+    popup.addEventListener('load', launchPrint, { once: true });
+    popup.document.close();
+    setTimeout(launchPrint, 1000);
+  }
+
+
+  function printBlankRequestForm() {
+    const popup = window.open('', '_blank', 'width=980,height=900');
+    if (!popup) {
+      toast('เบราว์เซอร์บล็อกหน้าพิมพ์ กรุณาอนุญาตป๊อปอัปสำหรับเว็บไซต์นี้');
+      return;
+    }
+    const logoUrl = new URL('./assets/logo.png', window.location.href).href;
+    popup.document.open();
+    popup.document.write(`<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>แบบแจ้งงานประชาสัมพันธ์</title><style>
+      @page{size:A4 portrait;margin:10mm}*{box-sizing:border-box}body{margin:0;background:#eef0f3;color:#211725;font-family:"Noto Sans Thai",Tahoma,sans-serif;font-size:13px;line-height:1.5}.sheet{width:190mm;min-height:277mm;margin:12px auto;background:#fff;padding:8mm 10mm 7mm;box-shadow:0 8px 35px rgba(0,0,0,.16)}.top{display:grid;grid-template-columns:22mm 1fr 28mm;align-items:center;gap:4mm;padding-bottom:3mm;border-bottom:2px solid #5b207d}.logo{width:20mm;height:20mm;object-fit:cover;border-radius:5mm}.heading{text-align:center}.heading h1{font-size:21px;line-height:1.2;margin:0;color:#4b176f}.heading h2{font-size:15px;margin:2px 0 0}.doc-no{text-align:right;align-self:start;font-size:10px;color:#6f6573}.gold-line{height:2px;background:#d5a53b;margin-top:1px}.note{margin:4mm 0 3mm;padding:2.7mm 3.5mm;border-radius:2.5mm;background:#f7f1fa;color:#5d4d64}.row{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.field{margin-top:3.2mm}.field label{display:block;color:#4b176f;font-weight:700;margin-bottom:1mm}.line{height:11mm;border:1px solid #d9d1dd;border-radius:2.5mm}.line.tall{height:30mm}.write-line{height:8mm;border-bottom:1px dotted #777}.checks{display:grid;grid-template-columns:1fr 1fr;gap:2mm 5mm;padding:3mm;border:1px solid #ddd4e2;border-radius:2.5mm}.check{display:flex;align-items:center;gap:2mm;min-height:8mm}.box{width:4.5mm;height:4.5mm;border:1.4px solid #5b207d;border-radius:1mm;flex:0 0 auto}.signatures{display:grid;grid-template-columns:1fr 1fr;gap:15mm;margin-top:10mm}.sign{text-align:center;padding-top:8mm;border-top:1px dotted #777}.sign small{display:block;color:#6f6573}.footer{text-align:center;color:#8d8391;font-size:9.5px;margin-top:8mm;padding-top:2mm;border-top:1px solid #eee}.no-print{position:fixed;right:20px;bottom:20px;border:0;border-radius:999px;background:#5b207d;color:#fff;padding:12px 18px;font-family:inherit;font-size:14px;font-weight:700;box-shadow:0 8px 25px rgba(75,23,111,.3)}@media print{body{background:#fff}.sheet{width:auto;min-height:auto;margin:0;padding:0;box-shadow:none}.no-print{display:none}}
+    </style></head><body><main class="sheet"><header class="top"><img class="logo" src="${logoUrl}" alt="โลโก้งานประชาสัมพันธ์"><div class="heading"><h1>แบบแจ้งงานประชาสัมพันธ์</h1><h2>เทศบาลเมืองบางรักน้อย</h2></div><div class="doc-no">วันที่รับเรื่อง<br>____ / ____ / ______</div></header><div class="gold-line"></div>
+      <div class="note">สำหรับกอง / สำนัก หรือผู้เกี่ยวข้องใช้แจ้งรายละเอียดงานให้ทีมประชาสัมพันธ์</div>
+      <div class="field"><label>ชื่องาน / กิจกรรม</label><div class="line"></div></div>
+      <div class="row"><div class="field"><label>วันที่จัดงาน</label><div class="line"></div></div><div class="field"><label>เวลา</label><div class="line"></div></div></div>
+      <div class="field"><label>สถานที่</label><div class="line"></div></div>
+      <div class="row"><div class="field"><label>กอง / สำนักผู้แจ้ง</label><div class="line"></div></div><div class="field"><label>ผู้ประสานงาน</label><div class="line"></div></div></div>
+      <div class="field"><label>เบอร์ติดต่อ</label><div class="line"></div></div>
+      <div class="field"><label>รายละเอียดงาน / ข้อมูลที่ควรทราบ</label><div class="line tall"></div></div>
+      <div class="field"><label>ต้องการให้ประชาสัมพันธ์ดำเนินการ</label><div class="checks"><div class="check"><span class="box"></span>ถ่ายภาพนิ่ง</div><div class="check"><span class="box"></span>ถ่ายวิดีโอ</div><div class="check"><span class="box"></span>เป็นพิธีกร</div><div class="check"><span class="box"></span>ถ่ายทอดสด</div><div class="check"><span class="box"></span>เขียนข่าวประชาสัมพันธ์</div><div class="check"><span class="box"></span>เผยแพร่ Facebook</div><div class="check"><span class="box"></span>จัดทำโปสเตอร์</div><div class="check"><span class="box"></span>อื่น ๆ __________________________</div></div></div>
+      <section class="signatures"><div class="sign"><strong>&nbsp;</strong><small>ผู้แจ้งงาน</small></div><div class="sign"><strong>&nbsp;</strong><small>วันที่แจ้ง</small></div></section>
+      <div class="footer">งานประชาสัมพันธ์ เทศบาลเมืองบางรักน้อย</div></main><button class="no-print" onclick="window.print()">พิมพ์ / บันทึก PDF</button></body></html>`);
     const launchPrint = () => {
       if (popup.__brnPrintStarted) return;
       popup.__brnPrintStarted = true;
@@ -801,12 +756,11 @@
     $('next-month').addEventListener('click', () => { state.cursor = new Date(state.cursor.getFullYear(), state.cursor.getMonth() + 1, 1); renderCalendar(); });
     $('today-button').addEventListener('click', () => { state.cursor = startOfMonth(new Date()); state.selectedDate = new Date(); renderCalendar(); $('calendar').scrollIntoView({ behavior: 'smooth' }); });
     ['add-event-button', 'add-event-top'].forEach((id) => $(id).addEventListener('click', () => openEvent(iso(state.selectedDate))));
-    ['nav-request-work', 'request-work-top', 'request-work-calendar'].forEach((id) => $(id)?.addEventListener('click', openRequestForm));
-    qsa('input[name="requestPrTasks"]', $('request-form')).forEach((input) => input.addEventListener('change', () => {
-      const other = $('request-form').querySelector('input[name="requestPrTasks"][value="other"]');
-      $('request-other-wrap').hidden = !other.checked;
-      if (!other.checked) $('request-other').value = '';
-    }));
+    $('print-request-form-button')?.addEventListener('click', () => {
+      if ($('account-menu')) $('account-menu').hidden = true;
+      $('account-button')?.setAttribute('aria-expanded', 'false');
+      printBlankRequestForm();
+    });
     $('event-all-day').addEventListener('change', syncAllDayFields);
     $('show-holidays').addEventListener('change', renderCalendar);
     $('show-buddhist').addEventListener('change', renderCalendar);
@@ -855,28 +809,6 @@
       else if (metric === 'missing') openTeamWork('missing');
       else if (metric === 'publish') openTeamWork('publish');
     }));
-
-    $('request-form').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const payload = getRequestFormData();
-      if (!payload.title || !payload.date) return;
-      const submit = $('request-form').querySelector('[type="submit"]');
-      submit.disabled = true;
-      try {
-        const savedId = await saveRequestedEvent(payload);
-        $('request-dialog').close();
-        toast('ส่งแจ้งงานแล้ว และเพิ่มลงปฏิทินทีมเรียบร้อย');
-        try {
-          await queueLine({ ...payload, id: savedId }, 'มีการแจ้งงานประชาสัมพันธ์');
-        } catch (lineError) {
-          console.error(lineError);
-          toast('บันทึกงานแล้ว แต่แจ้ง LINE ไม่สำเร็จ กรุณาตรวจระบบส่งข้อความ', 5000);
-        }
-      } catch (error) {
-        console.error(error);
-        toast('ส่งแจ้งงานไม่สำเร็จ กรุณาตรวจสิทธิ์ Firestore');
-      } finally { submit.disabled = false; }
-    });
 
     $('event-form').addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -967,7 +899,7 @@
     $('nav-dashboard').addEventListener('click', (event) => { event.preventDefault(); setMainView('dashboard'); });
     $('nav-calendar').addEventListener('click', (event) => { event.preventDefault(); setMainView('calendar'); });
     $('brand-home')?.addEventListener('click', (event) => { event.preventDefault(); setMainView('dashboard'); });
-    window.addEventListener('popstate', () => setMainView(location.hash === '#calendar' ? 'calendar' : 'dashboard', { updateHash: false, scroll: false }));
+    window.addEventListener('popstate', () => setMainView(location.hash === '#calendar' ? 'calendar' : 'dashboard', { updateHash: false }));
 
     qsa('[data-close]').forEach((button) => button.addEventListener('click', () => button.closest('dialog').close()));
     qsa('dialog').forEach((dialog) => dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); }));
