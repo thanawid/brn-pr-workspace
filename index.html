@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=1.2.0">
-  <script src="./auth-bootstrap.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="./styles.css?v=1.2.1">
+  <script src="./auth-bootstrap.js?v=1.2.1"></script>
 </head>
 <body>
   <div id="auth-gate" class="auth-gate" hidden>
@@ -42,7 +42,7 @@
 
   <main class="app-shell" aria-hidden="true">
     <header class="site-header">
-      <a class="brand" href="#dashboard" aria-label="BRN PR Board">
+      <a id="brand-home" class="brand" href="#dashboard" aria-label="BRN PR Board">
         <img src="./assets/logo.png" alt="">
         <span><strong>BRN PR Board</strong><small>กระดานงานประชาสัมพันธ์</small></span>
       </a>
@@ -58,7 +58,7 @@
       </div>
     </header>
 
-    <section id="dashboard" class="dashboard-shell">
+    <section id="dashboard" class="dashboard-shell" data-app-view="dashboard">
       <div class="today-command">
         <div class="today-copy">
           <span class="eyebrow">ศูนย์งานประชาสัมพันธ์วันนี้</span>
@@ -66,7 +66,11 @@
           <p id="today-summary">ระบบกำลังจัดลำดับงานและตรวจความพร้อมให้ทีม</p>
           <div id="live-datetime" class="live-datetime"><strong id="live-date-text"></strong><time id="live-time-text"></time></div>
         </div>
-        <img class="hero-visual" src="./assets/guide-camera-clean.png" alt="" aria-hidden="true">
+        <div class="hero-media-stack" aria-hidden="true">
+          <figure class="hero-media-card media-camera"><img src="./assets/guide-camera-clean.png" alt=""><span>ภาพนิ่ง</span></figure>
+          <figure class="hero-media-card media-video"><img src="./assets/guide-video-clean.png" alt=""><span>วิดีโอ</span></figure>
+          <figure class="hero-media-card media-phone"><img src="./assets/guide-phone-clean.png" alt=""><span>เผยแพร่</span></figure>
+        </div>
         <div id="next-event-card" class="next-event-card" aria-live="polite"></div>
       </div>
 
@@ -91,7 +95,7 @@
       </section>
     </section>
 
-    <section id="calendar" class="calendar-wrap">
+    <section id="calendar" class="calendar-wrap" data-app-view="calendar" hidden>
       <div class="calendar-top">
         <div class="month-nav"><button id="prev-month" class="round" type="button" aria-label="เดือนก่อน">‹</button><div><span>ปฏิทินงานของทีม</span><h2 id="month-title"></h2></div><button id="next-month" class="round" type="button" aria-label="เดือนถัดไป">›</button></div>
         <div class="actions">
@@ -118,8 +122,8 @@
       <div id="assistant-alerts" class="assistant-alerts"></div>
     </section>
 
-    <section class="important">
-      <div><span>มองล่วงหน้า</span><h2>วันสำคัญที่ใกล้ถึง</h2><p>ระบบคัดเฉพาะวันที่ควรเริ่มเตรียมภาพ คลิป หรือข้อความล่วงหน้า</p></div>
+    <section id="important-section" class="important" data-app-view="dashboard">
+      <div class="important-intro"><span>มองล่วงหน้า</span><h2>วันสำคัญที่ใกล้ถึง</h2><p>ระบบคัดเฉพาะวันที่ควรเริ่มเตรียมภาพ คลิป หรือข้อความล่วงหน้า</p><img class="important-visual" src="./assets/guide-calendar-clean.png" alt="" aria-hidden="true"></div>
       <div id="important-days" class="important-days"></div>
     </section>
 
@@ -216,8 +220,8 @@
   <dialog id="team-work-dialog"><article class="modal team-modal"><header><div><span>รายการที่ทีมต้องติดตาม</span><h2>งานของทีม</h2></div><button type="button" data-close>×</button></header><div class="team-filters"><button class="active" data-team-filter="active" type="button">กำลังดำเนินการ</button><button data-team-filter="overdue" type="button">งานค้าง/เลยกำหนด</button><button data-team-filter="missing" type="button">ข้อมูลไม่ครบ</button><button data-team-filter="publish" type="button">รอเผยแพร่</button><button data-team-filter="all" type="button">ทั้งหมด</button></div><div id="team-work-list" class="team-work-list"></div></article></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" aria-hidden="true"></div>
 
-  <script src="./auth-config.js?v=1.2.0"></script>
-  <script src="./calendar-data.js?v=1.2.0"></script>
-  <script type="module" src="./firebase-auth.js?v=1.2.0"></script>
+  <script src="./auth-config.js?v=1.2.1"></script>
+  <script src="./calendar-data.js?v=1.2.1"></script>
+  <script type="module" src="./firebase-auth.js?v=1.2.1"></script>
 </body>
 </html>

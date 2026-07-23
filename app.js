@@ -67,6 +67,7 @@
     detailTab: 'prep',
     teamFilter: 'active',
     metricRange: null,
+    mainView: location.hash === '#calendar' ? 'calendar' : 'dashboard',
   };
 
   function startOfMonth(date) {
@@ -267,6 +268,33 @@
       el.classList.remove('show');
       el.setAttribute('aria-hidden', 'true');
     }, duration);
+  }
+
+
+  function setMainView(view, options = {}) {
+    const nextView = view === 'calendar' ? 'calendar' : 'dashboard';
+    state.mainView = nextView;
+    const dashboard = $('dashboard');
+    const calendar = $('calendar');
+    const important = $('important-section');
+    if (dashboard) dashboard.hidden = nextView !== 'dashboard';
+    if (calendar) calendar.hidden = nextView !== 'calendar';
+    if (important) important.hidden = nextView !== 'dashboard';
+    $('nav-dashboard')?.classList.toggle('active', nextView === 'dashboard');
+    $('nav-calendar')?.classList.toggle('active', nextView === 'calendar');
+    if ($('nav-dashboard')) nextView === 'dashboard' ? $('nav-dashboard').setAttribute('aria-current', 'page') : $('nav-dashboard').removeAttribute('aria-current');
+    if ($('nav-calendar')) nextView === 'calendar' ? $('nav-calendar').setAttribute('aria-current', 'page') : $('nav-calendar').removeAttribute('aria-current');
+    const activeSection = nextView === 'calendar' ? calendar : dashboard;
+    if (activeSection) {
+      activeSection.classList.remove('view-enter');
+      requestAnimationFrame(() => activeSection.classList.add('view-enter'));
+      setTimeout(() => activeSection.classList.remove('view-enter'), 520);
+    }
+    if (options.updateHash !== false) {
+      const targetHash = `#${nextView}`;
+      if (location.hash !== targetHash) history.pushState({ brnView: nextView }, '', targetHash);
+    }
+    if (options.scroll !== false) window.scrollTo({ top: 0, behavior: options.instant ? 'auto' : 'smooth' });
   }
 
   function renderAll() {
@@ -936,8 +964,10 @@
       openDetail(item.dataset.teamEventId);
     });
     qsa('[data-team-filter]').forEach((button) => button.addEventListener('click', () => { state.metricRange = null; state.teamFilter = button.dataset.teamFilter; renderTeamWork(); }));
-    $('nav-dashboard').addEventListener('click', () => { $('nav-dashboard').classList.add('active'); $('nav-calendar').classList.remove('active'); });
-    $('nav-calendar').addEventListener('click', () => { $('nav-calendar').classList.add('active'); $('nav-dashboard').classList.remove('active'); });
+    $('nav-dashboard').addEventListener('click', (event) => { event.preventDefault(); setMainView('dashboard'); });
+    $('nav-calendar').addEventListener('click', (event) => { event.preventDefault(); setMainView('calendar'); });
+    $('brand-home')?.addEventListener('click', (event) => { event.preventDefault(); setMainView('dashboard'); });
+    window.addEventListener('popstate', () => setMainView(location.hash === '#calendar' ? 'calendar' : 'dashboard', { updateHash: false, scroll: false }));
 
     qsa('[data-close]').forEach((button) => button.addEventListener('click', () => button.closest('dialog').close()));
     qsa('dialog').forEach((dialog) => dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); }));
@@ -949,6 +979,7 @@
     updateLiveDateTime();
     setInterval(updateLiveDateTime, 30000);
     renderAll();
+    setMainView(state.mainView, { updateHash: false, scroll: false, instant: true });
     if (window.BRN_CURRENT_USER) initCloud();
     else document.addEventListener('brn-auth-ready', initCloud, { once: true });
     if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('./sw.js').catch(console.error);

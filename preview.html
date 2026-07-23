@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=1.2.0">
+  <link rel="stylesheet" href="./styles.css?v=1.2.1">
 </head>
 <body>
   <div id="auth-gate" class="auth-gate" hidden>
@@ -41,7 +41,7 @@
 
   <main class="app-shell" aria-hidden="false">
     <header class="site-header">
-      <a class="brand" href="#dashboard" aria-label="BRN PR Board">
+      <a id="brand-home" class="brand" href="#dashboard" aria-label="BRN PR Board">
         <img src="./assets/logo.png" alt="">
         <span><strong>BRN PR Board</strong><small>กระดานงานประชาสัมพันธ์</small></span>
       </a>
@@ -57,7 +57,7 @@
       </div>
     </header>
 
-    <section id="dashboard" class="dashboard-shell">
+    <section id="dashboard" class="dashboard-shell" data-app-view="dashboard">
       <div class="today-command">
         <div class="today-copy">
           <span class="eyebrow">ศูนย์งานประชาสัมพันธ์วันนี้</span>
@@ -65,7 +65,11 @@
           <p id="today-summary">ระบบกำลังจัดลำดับงานและตรวจความพร้อมให้ทีม</p>
           <div id="live-datetime" class="live-datetime"><strong id="live-date-text"></strong><time id="live-time-text"></time></div>
         </div>
-        <img class="hero-visual" src="./assets/guide-camera-clean.png" alt="" aria-hidden="true">
+        <div class="hero-media-stack" aria-hidden="true">
+          <figure class="hero-media-card media-camera"><img src="./assets/guide-camera-clean.png" alt=""><span>ภาพนิ่ง</span></figure>
+          <figure class="hero-media-card media-video"><img src="./assets/guide-video-clean.png" alt=""><span>วิดีโอ</span></figure>
+          <figure class="hero-media-card media-phone"><img src="./assets/guide-phone-clean.png" alt=""><span>เผยแพร่</span></figure>
+        </div>
         <div id="next-event-card" class="next-event-card" aria-live="polite"></div>
       </div>
 
@@ -90,7 +94,7 @@
       </section>
     </section>
 
-    <section id="calendar" class="calendar-wrap">
+    <section id="calendar" class="calendar-wrap" data-app-view="calendar" hidden>
       <div class="calendar-top">
         <div class="month-nav"><button id="prev-month" class="round" type="button" aria-label="เดือนก่อน">‹</button><div><span>ปฏิทินงานของทีม</span><h2 id="month-title"></h2></div><button id="next-month" class="round" type="button" aria-label="เดือนถัดไป">›</button></div>
         <div class="actions">
@@ -117,8 +121,8 @@
       <div id="assistant-alerts" class="assistant-alerts"></div>
     </section>
 
-    <section class="important">
-      <div><span>มองล่วงหน้า</span><h2>วันสำคัญที่ใกล้ถึง</h2><p>ระบบคัดเฉพาะวันที่ควรเริ่มเตรียมภาพ คลิป หรือข้อความล่วงหน้า</p></div>
+    <section id="important-section" class="important" data-app-view="dashboard">
+      <div class="important-intro"><span>มองล่วงหน้า</span><h2>วันสำคัญที่ใกล้ถึง</h2><p>ระบบคัดเฉพาะวันที่ควรเริ่มเตรียมภาพ คลิป หรือข้อความล่วงหน้า</p><img class="important-visual" src="./assets/guide-calendar-clean.png" alt="" aria-hidden="true"></div>
       <div id="important-days" class="important-days"></div>
     </section>
 
@@ -225,7 +229,7 @@
       {id:'demo-4',title:'โครงการร่วมกิจกรรมร่วมใจเพื่อผู้สูงวัยบางรักน้อย',description:'สรุปข่าวและอัลบั้มภาพหลังจบกิจกรรม',date:'2026-07-14',startTime:'08:30',location:'ลานอเนกประสงค์ เทศบาลเมืองบางรักน้อย',owner:'กองสวัสดิการสังคม',category:'activity',status:'waiting_publish',contactName:'กองสวัสดิการสังคม',contactPhone:'02-193-4512',chairperson:'นายสุชาติ แก้วประดิษฐ์',outputs:['news','album','video'],prTasks:['photo','video','write_news','facebook'],prSummary:'บันทึกภาพกิจกรรม จัดทำข่าวพร้อมอัลบั้มภาพ และเผยแพร่ประชาสัมพันธ์เรียบร้อยแล้ว',notifyLine:false}
     ]));
   </script>
-  <script src="./calendar-data.js?v=1.2.0"></script>
-  <script src="./app.js?v=1.2.0"></script>
+  <script src="./calendar-data.js?v=1.2.1"></script>
+  <script src="./app.js?v=1.2.1"></script>
 </body>
 </html>
