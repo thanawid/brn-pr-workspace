@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=1.1.0">
+  <link rel="stylesheet" href="./styles.css?v=1.1.1">
 </head>
 <body>
   <div id="auth-gate" class="auth-gate" hidden>
@@ -76,9 +76,13 @@
 
       <section class="focus-board" aria-labelledby="focus-title">
         <div class="section-head compact">
-          <div><span>สิ่งที่ต้องจับตา</span><h2 id="focus-title">ลำดับงานที่ทีมควรทำต่อ</h2></div>
-          <button id="add-event-top" class="btn primary" type="button">＋ เพิ่มงาน</button>
+          <div><span>สิ่งที่ต้องจับตา</span><h2 id="focus-title">งานใกล้ถึงที่ควรเตรียม</h2></div>
+          <div class="focus-head-actions">
+            <button id="focus-all-button" class="btn ghost" type="button">ดูงานทั้งหมด</button>
+            <button id="add-event-top" class="btn primary" type="button">＋ เพิ่มงาน</button>
+          </div>
         </div>
+        <div id="focus-overdue-summary" class="focus-overdue-summary" hidden></div>
         <div id="focus-list" class="focus-list"></div>
       </section>
     </section>
@@ -167,7 +171,7 @@
   </dialog>
 
   <dialog id="day-dialog"><article class="modal day-modal"><header><div><span>งานประจำวัน</span><h2 id="day-title"></h2></div><button type="button" data-close>×</button></header><div id="day-list" class="day-list"></div><footer><button id="day-add" class="btn primary" type="button">＋ เพิ่มงานวันนี้</button><span></span><button class="btn ghost" type="button" data-close>ปิด</button></footer></article></dialog>
-  <dialog id="team-work-dialog"><article class="modal team-modal"><header><div><span>รายการที่ทีมต้องติดตาม</span><h2>งานของทีม</h2></div><button type="button" data-close>×</button></header><div class="team-filters"><button class="active" data-team-filter="active" type="button">กำลังดำเนินการ</button><button data-team-filter="missing" type="button">ข้อมูลไม่ครบ</button><button data-team-filter="publish" type="button">รอเผยแพร่</button><button data-team-filter="all" type="button">ทั้งหมด</button></div><div id="team-work-list" class="team-work-list"></div></article></dialog>
+  <dialog id="team-work-dialog"><article class="modal team-modal"><header><div><span>รายการที่ทีมต้องติดตาม</span><h2>งานของทีม</h2></div><button type="button" data-close>×</button></header><div class="team-filters"><button class="active" data-team-filter="active" type="button">กำลังดำเนินการ</button><button data-team-filter="overdue" type="button">งานค้าง/เลยกำหนด</button><button data-team-filter="missing" type="button">ข้อมูลไม่ครบ</button><button data-team-filter="publish" type="button">รอเผยแพร่</button><button data-team-filter="all" type="button">ทั้งหมด</button></div><div id="team-work-list" class="team-work-list"></div></article></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -180,7 +184,7 @@
       {id:'demo-4',title:'โครงการร่วมกิจกรรมร่วมใจเพื่อผู้สูงวัยบางรักน้อย',description:'สรุปข่าวและอัลบั้มภาพหลังจบกิจกรรม',date:'2026-07-14',startTime:'08:30',location:'ลานอเนกประสงค์ เทศบาลเมืองบางรักน้อย',owner:'กองสวัสดิการสังคม',category:'activity',status:'waiting_publish',contactName:'กองสวัสดิการสังคม',contactPhone:'02-193-4512',chairperson:'นายสุชาติ แก้วประดิษฐ์',outputs:['news','album','video'],notifyLine:false}
     ]));
   </script>
-  <script src="./calendar-data.js?v=1.1.0"></script>
-  <script src="./app.js?v=1.1.0"></script>
+  <script src="./calendar-data.js?v=1.1.1"></script>
+  <script src="./app.js?v=1.1.1"></script>
 </body>
 </html>

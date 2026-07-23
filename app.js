@@ -270,17 +270,23 @@
       card.innerHTML = `<span class="next-label">งานถัดไป · ${when}</span><h2>${esc(next.title)}</h2><p>${esc(thaiDate(next.date))} · ${esc(displayTime(next))}</p><p>${esc(next.location || 'ยังไม่ระบุสถานที่')}</p><div class="next-actions"><button class="btn primary" data-open-next="${esc(next.id)}" type="button">เปิดใบงาน PR</button><button class="btn ghost" data-edit-next="${esc(next.id)}" type="button">แก้ไขข้อมูล</button></div>`;
     }
 
-    const focusCandidates = sortedEvents(state.events.filter((e) => isActive(e) && (e.date >= todayKey || e.status === 'waiting_publish')))
-      .sort((a, b) => {
-        const ar = riskAlerts(a).length ? 0 : 1;
-        const br = riskAlerts(b).length ? 0 : 1;
-        return ar - br || `${a.date} ${a.startTime || ''}`.localeCompare(`${b.date} ${b.startTime || ''}`);
-      }).slice(0, 6);
+    const overdueEvents = sortedEvents(state.events.filter((e) => e.date < todayKey && !['published', 'completed', 'cancelled'].includes(e.status)))
+      .sort((a, b) => `${b.date} ${b.startTime || b.time || '99:99'}`.localeCompare(`${a.date} ${a.startTime || a.time || '99:99'}`));
+    const overdueSummary = $('focus-overdue-summary');
+    if (overdueEvents.length) {
+      overdueSummary.hidden = false;
+      overdueSummary.innerHTML = `<div><strong>มีงานค้างหรือเลยกำหนด ${overdueEvents.length} งาน</strong><span>แยกไว้ต่างหาก เพื่อไม่ให้ปนกับงานที่กำลังจะมาถึง</span></div><button class="btn ghost" data-open-overdue type="button">ดูงานค้าง</button>`;
+    } else {
+      overdueSummary.hidden = true;
+      overdueSummary.innerHTML = '';
+    }
+
+    const focusCandidates = sortedEvents(state.events.filter((e) => e.date >= todayKey && isActive(e))).slice(0, 5);
     $('focus-list').innerHTML = focusCandidates.length ? focusCandidates.map((event) => {
       const date = parseDate(event.date);
       const alerts = riskAlerts(event);
       return `<article class="focus-item"><div class="focus-date"><strong>${date.getDate()}</strong><span>${SHORT_MONTHS[date.getMonth()]}</span></div><div class="focus-copy"><strong>${esc(event.title)}</strong><span>${esc(displayTime(event))} · ${esc(event.location || event.owner || 'ยังไม่ระบุสถานที่')}</span><small>${alerts.length ? `⚠ ${esc(alerts[0])}` : '✓ ข้อมูลหลักอยู่ในระดับพร้อมใช้งาน'}</small></div><div class="focus-actions">${statusPill(event)}${readinessPill(event)}<button class="btn ghost" data-focus-id="${esc(event.id)}" type="button">เปิดงาน</button></div></article>`;
-    }).join('') : '<div class="empty-state">ยังไม่มีงานที่ต้องติดตาม เพิ่มงานใหม่เพื่อเริ่มจัดลำดับให้ทีม</div>';
+    }).join('') : '<div class="empty-state">ยังไม่มีงานที่กำลังจะมาถึง เพิ่มงานใหม่เพื่อเริ่มจัดลำดับให้ทีม</div>';
   }
 
   function renderCalendar() {
@@ -554,6 +560,8 @@
     if (state.metricRange === 'today') rows = rows.filter((event) => event.date === today && event.status !== 'cancelled');
     else if (state.metricRange === 'week') rows = rows.filter((event) => event.date >= today && event.date <= iso(addDays(new Date(), 7)) && isActive(event));
     else if (state.teamFilter === 'active') rows = rows.filter((event) => isActive(event) && (event.date >= today || event.status === 'waiting_publish'));
+    else if (state.teamFilter === 'overdue') rows = rows.filter((event) => event.date < today && !['published', 'completed', 'cancelled'].includes(event.status))
+      .sort((a, b) => `${b.date} ${b.startTime || b.time || '99:99'}`.localeCompare(`${a.date} ${a.startTime || a.time || '99:99'}`));
     else if (state.teamFilter === 'missing') rows = rows.filter((event) => event.date >= today && isActive(event) && readiness(event).missing.length);
     else if (state.teamFilter === 'publish') rows = rows.filter((event) => event.status === 'waiting_publish');
     qsa('[data-team-filter]').forEach((button) => button.classList.toggle('active', !state.metricRange && button.dataset.teamFilter === state.teamFilter));
@@ -648,6 +656,10 @@
     $('focus-list').addEventListener('click', (event) => {
       const button = event.target.closest('[data-focus-id]');
       if (button) openDetail(button.dataset.focusId);
+    });
+    $('focus-all-button').addEventListener('click', () => openTeamWork('active'));
+    $('focus-overdue-summary').addEventListener('click', (event) => {
+      if (event.target.closest('[data-open-overdue]')) openTeamWork('overdue');
     });
     qsa('[data-metric]').forEach((button) => button.addEventListener('click', () => {
       const metric = button.dataset.metric;
