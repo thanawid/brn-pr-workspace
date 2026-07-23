@@ -10,9 +10,9 @@
   <link rel="icon" href="./assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=1.1.2">
-  <script src="./auth-bootstrap.js?v=1.1.2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css?v=1.2.0">
+  <script src="./auth-bootstrap.js?v=1.2.0"></script>
 </head>
 <body>
   <div id="auth-gate" class="auth-gate" hidden>
@@ -49,6 +49,7 @@
       <nav aria-label="เมนูหลัก">
         <a id="nav-dashboard" class="active" href="#dashboard">ภาพรวม</a>
         <a id="nav-calendar" href="#calendar">ปฏิทิน</a>
+        <button id="nav-request-work" class="nav-request" type="button">แจ้งงาน</button>
         <button id="nav-team-work" type="button">งานของทีม</button>
       </nav>
       <div id="account-area" class="account-area" hidden>
@@ -65,6 +66,7 @@
           <p id="today-summary">ระบบกำลังจัดลำดับงานและตรวจความพร้อมให้ทีม</p>
           <div id="live-datetime" class="live-datetime"><strong id="live-date-text"></strong><time id="live-time-text"></time></div>
         </div>
+        <img class="hero-visual" src="./assets/guide-camera-clean.png" alt="" aria-hidden="true">
         <div id="next-event-card" class="next-event-card" aria-live="polite"></div>
       </div>
 
@@ -80,6 +82,7 @@
           <div><span>สิ่งที่ต้องจับตา</span><h2 id="focus-title">งานใกล้ถึงที่ควรเตรียม</h2></div>
           <div class="focus-head-actions">
             <button id="focus-all-button" class="btn ghost" type="button">ดูงานทั้งหมด</button>
+            <button id="request-work-top" class="btn soft" type="button">แจ้งงานให้ PR</button>
             <button id="add-event-top" class="btn primary" type="button">＋ เพิ่มงาน</button>
           </div>
         </div>
@@ -94,6 +97,7 @@
         <div class="actions">
           <div class="toolbox"><label class="search-box" aria-label="ค้นหางาน"><span>⌕</span><input id="event-search" type="search" placeholder="ค้นหางาน สถานที่ หรือกองงาน"></label><select id="event-filter" aria-label="กรองประเภทงาน"><option value="all">ทุกประเภท</option><option value="meeting">ประชุม / อบรม</option><option value="activity">กิจกรรม</option><option value="media">ถ่ายทำ / สื่อ</option><option value="other">อื่น ๆ</option></select><select id="status-filter" aria-label="กรองสถานะ"><option value="all">ทุกสถานะ</option><option value="waiting_info">รอข้อมูล</option><option value="confirmed">ยืนยันแล้ว</option><option value="preparing">กำลังเตรียมสื่อ</option><option value="ready">พร้อมปฏิบัติงาน</option><option value="waiting_publish">รอเผยแพร่</option><option value="published">เผยแพร่แล้ว</option><option value="completed">เสร็จสิ้น</option></select></div>
           <button id="today-button" class="btn ghost" type="button">วันนี้</button>
+          <button id="request-work-calendar" class="btn soft" type="button">แจ้งงาน</button>
           <button id="add-event-button" class="btn primary" type="button">＋ เพิ่มงาน</button>
         </div>
       </div>
@@ -119,8 +123,42 @@
       <div id="important-days" class="important-days"></div>
     </section>
 
-    <footer class="site-footer"><strong>BRN PR Board</strong><span>งานนำ ปฏิทินนำ ระบบสนับสนุนอยู่เบื้องหลัง</span><small>เทศบาลเมืองบางรักน้อย</small></footer>
+    <footer class="site-footer">
+      <div class="footer-mark"><img src="./assets/logo.png" alt=""><span><strong>BRN PR Board</strong><small>วางแผนงานชัดเจน สื่อสารอย่างมืออาชีพ</small></span></div>
+      <p>งานประชาสัมพันธ์ เทศบาลเมืองบางรักน้อย</p>
+      <small class="copyright">© 2569 งานประชาสัมพันธ์ เทศบาลเมืองบางรักน้อย สงวนลิขสิทธิ์</small>
+    </footer>
   </main>
+
+  <dialog id="request-dialog">
+    <form id="request-form" class="modal request-modal">
+      <header><div><span>กรอกเท่าที่ทราบ ระบบจะจัดลงปฏิทินให้ทันที</span><h2>แบบแจ้งงานประชาสัมพันธ์</h2></div><button type="button" data-close>×</button></header>
+      <div class="request-intro"><img src="./assets/guide-camera-clean.png" alt="กล้องถ่ายภาพ"><div><strong>แจ้งรายละเอียดงานให้ทีมประชาสัมพันธ์</strong><p>ไม่ต้องทำบันทึกหลายขั้นตอน กรอกข้อมูลสำคัญแล้วกดส่งได้เลย ทีม PR ยังแก้ไขและเติมข้อมูลภายหลังได้</p></div></div>
+      <div class="form-grid">
+        <label class="wide">ชื่องาน / กิจกรรม *<input id="request-title" required placeholder="เช่น โครงการอบรม หรือกิจกรรมชุมชน"></label>
+        <label>วันที่ *<input id="request-date" type="date" required></label>
+        <label>เวลาเริ่ม<input id="request-time" type="time"></label>
+        <label class="wide">สถานที่<input id="request-location" placeholder="ระบุสถานที่หรือจุดนัดหมาย"></label>
+        <label>กอง / สำนักผู้แจ้ง<input id="request-owner" placeholder="เช่น กองสาธารณสุขฯ"></label>
+        <label>ผู้ประสานงาน<input id="request-contact-name"></label>
+        <label>เบอร์ติดต่อ<input id="request-contact-phone" inputmode="tel"></label>
+        <label class="wide">รายละเอียดงานโดยย่อ<textarea id="request-description" rows="3" placeholder="วัตถุประสงค์ กำหนดการ หรือข้อมูลที่ทีม PR ควรทราบ"></textarea></label>
+        <fieldset class="wide output-fieldset request-task-fieldset"><legend>ต้องการให้ประชาสัมพันธ์ช่วยด้านใด</legend><div class="output-grid request-task-grid">
+          <label><input type="checkbox" name="requestPrTasks" value="photo"> ถ่ายภาพนิ่ง</label>
+          <label><input type="checkbox" name="requestPrTasks" value="video"> ถ่ายวิดีโอ</label>
+          <label><input type="checkbox" name="requestPrTasks" value="mc"> เป็นพิธีกร</label>
+          <label><input type="checkbox" name="requestPrTasks" value="live"> ถ่ายทอดสด</label>
+          <label><input type="checkbox" name="requestPrTasks" value="write_news"> เขียนข่าวประชาสัมพันธ์</label>
+          <label><input type="checkbox" name="requestPrTasks" value="facebook"> เผยแพร่ Facebook</label>
+          <label><input type="checkbox" name="requestPrTasks" value="poster"> จัดทำโปสเตอร์</label>
+          <label><input type="checkbox" name="requestPrTasks" value="reel"> จัดทำ Reel / คลิปสั้น</label>
+          <label><input type="checkbox" name="requestPrTasks" value="other"> งานอื่น ๆ</label>
+        </div></fieldset>
+        <label id="request-other-wrap" class="wide" hidden>งานอื่น ๆ ที่ต้องการ<input id="request-other" placeholder="ระบุเพิ่มเติม"></label>
+      </div>
+      <footer><span></span><button class="btn ghost" type="button" data-close>ยกเลิก</button><button class="btn primary" type="submit">ส่งแจ้งงาน</button></footer>
+    </form>
+  </dialog>
 
   <dialog id="event-dialog">
     <form id="event-form" class="modal event-modal">
@@ -176,10 +214,10 @@
 
   <dialog id="day-dialog"><article class="modal day-modal"><header><div><span>งานประจำวัน</span><h2 id="day-title"></h2></div><button type="button" data-close>×</button></header><div id="day-list" class="day-list"></div><footer><button id="day-add" class="btn primary" type="button">＋ เพิ่มงานวันนี้</button><span></span><button class="btn ghost" type="button" data-close>ปิด</button></footer></article></dialog>
   <dialog id="team-work-dialog"><article class="modal team-modal"><header><div><span>รายการที่ทีมต้องติดตาม</span><h2>งานของทีม</h2></div><button type="button" data-close>×</button></header><div class="team-filters"><button class="active" data-team-filter="active" type="button">กำลังดำเนินการ</button><button data-team-filter="overdue" type="button">งานค้าง/เลยกำหนด</button><button data-team-filter="missing" type="button">ข้อมูลไม่ครบ</button><button data-team-filter="publish" type="button">รอเผยแพร่</button><button data-team-filter="all" type="button">ทั้งหมด</button></div><div id="team-work-list" class="team-work-list"></div></article></dialog>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-hidden="true"></div>
 
-  <script src="./auth-config.js?v=1.1.2"></script>
-  <script src="./calendar-data.js?v=1.1.2"></script>
-  <script type="module" src="./firebase-auth.js?v=1.1.2"></script>
+  <script src="./auth-config.js?v=1.2.0"></script>
+  <script src="./calendar-data.js?v=1.2.0"></script>
+  <script type="module" src="./firebase-auth.js?v=1.2.0"></script>
 </body>
 </html>
