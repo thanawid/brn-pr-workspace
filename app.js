@@ -129,13 +129,40 @@
     return `<img src="${dayPictureAsset(kind)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
   }
 
+  const IMPORTANT_DAY_BACKGROUND_RULES = [
+    [/ขึ้นปีใหม่|วันสิ้นปี|ช่วงปีใหม่/, 'new-year.webp'],
+    [/วันเด็ก/, 'childrens-day.webp'],
+    [/วันครู/, 'teachers-day.webp'],
+    [/มาฆบูชา/, 'makha-bucha.webp'],
+    [/วันจักรี/, 'chakri-day.webp'],
+    [/สงกรานต์/, 'songkran-day.webp'],
+    [/วันแรงงาน/, 'labour-day.webp'],
+    [/วิสาขบูชา/, 'visakha-bucha.webp'],
+    [/วันสิ่งแวดล้อมโลก|วันสิ่งแวดล้อมไทย/, 'world-environment-day.webp'],
+    [/ต่อต้านยาเสพติด/, 'anti-drug-day.webp'],
+    [/อาสาฬหบูชา/, 'asalha-bucha.webp'],
+    [/วันเข้าพรรษา/, 'buddhist-lent-day.webp'],
+    [/วันแม่/, 'mothers-day.webp'],
+    [/วันปิยมหาราช/, 'chulalongkorn-day.webp'],
+    [/วันออกพรรษา/, 'end-buddhist-lent.webp'],
+    [/วันพ่อแห่งชาติ|วันชาติ/, 'fathers-day-national-day.webp'],
+    [/วันรัฐธรรมนูญ/, 'constitution-day.webp'],
+  ];
+
+  function importantDayBackgroundAsset(item = {}) {
+    const hay = `${item.title || ''} ${item.type || ''} ${item.note || ''}`;
+    const rule = IMPORTANT_DAY_BACKGROUND_RULES.find(([pattern]) => pattern.test(hay));
+    return rule ? `assets/important-days/${rule[1]}` : '';
+  }
+
   function buildDayPicture(important = [], buddhist = null) {
     const parts = [];
     if (important.length) {
       const primary = important[0];
-      const kind = specialImageType(primary);
-      const extra = important.length > 1 ? `<small class="day-picture-count">+${important.length - 1}</small>` : '';
-      parts.push(`<div class="day-picture day-picture-important ${kind}" title="${esc(primary.title)}" aria-label="${esc(primary.title)}">${dayPictureMarkup(kind, primary.title)}${extra}</div>`);
+      const src = importantDayBackgroundAsset(primary);
+      if (src) {
+        parts.push(`<div class="day-picture day-picture-important" title="${esc(primary.title)}" aria-label="${esc(primary.title)}"><img src="${src}" alt="${esc(primary.title)}" loading="lazy" decoding="async"></div>`);
+      }
     }
     if (buddhist) {
       parts.push(`<div class="day-picture day-picture-buddhist" title="วันพระ" aria-label="วันพระ">${dayPictureMarkup('buddhist', 'วันพระ')}</div>`);
