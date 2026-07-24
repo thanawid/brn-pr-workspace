@@ -170,6 +170,18 @@
     return rule ? `assets/important-days/${rule[1]}` : '';
   }
 
+  function importantDayVisualMarkup(item = {}) {
+    const title = item.title || '';
+    const src = importantDayBackgroundAsset(item);
+    if (src) return `<img src="${src}" alt="${esc(title)}" loading="lazy" decoding="async">`;
+    return dayPictureMarkup(specialImageType(item), title);
+  }
+
+  function upcomingImportantForHero() {
+    const today = iso(new Date());
+    return IMPORTANT.find((item) => item.date >= today) || IMPORTANT[0] || null;
+  }
+
   function buildDayPicture(important = [], buddhist = null) {
     const parts = [];
     if (important.length) {
@@ -394,6 +406,30 @@
       $('today-summary').textContent = weekEvents.length ? `มี ${weekEvents.length} งานใน 7 วันข้างหน้า ควรใช้วันนี้เตรียมข้อมูลและสื่อ` : 'ตารางสัปดาห์นี้ยังว่าง เหมาะสำหรับวางแผนคอนเทนต์ล่วงหน้า';
     }
 
+    const heroImportant = upcomingImportantForHero();
+    const heroVisual = $('hero-main-visual');
+    const heroCaption = $('hero-visual-caption');
+    if (heroVisual) {
+      const heroSrc = heroImportant ? importantDayBackgroundAsset(heroImportant) : '';
+      if (heroSrc) {
+        heroVisual.src = heroSrc;
+        heroVisual.alt = heroImportant.title || '';
+        if (heroCaption) {
+          const diff = daysBetween(new Date(), parseDate(heroImportant.date));
+          const when = diff === 0 ? 'วันสำคัญวันนี้' : diff === 1 ? 'วันสำคัญพรุ่งนี้' : `อีก ${diff} วัน`;
+          heroCaption.hidden = false;
+          heroCaption.innerHTML = `<strong>${esc(heroImportant.title)}</strong><span>${esc(when)} · ${esc(thaiDate(heroImportant.date, false))}</span>`;
+        }
+      } else {
+        heroVisual.src = './assets/guide-camera-clean.png';
+        heroVisual.alt = '';
+        if (heroCaption) {
+          heroCaption.hidden = true;
+          heroCaption.innerHTML = '';
+        }
+      }
+    }
+
     const upcoming = sortedEvents(state.events.filter((e) => e.date >= todayKey && isActive(e)));
     const next = upcoming[0];
     const card = $('next-event-card');
@@ -543,7 +579,8 @@
       const diff = daysBetween(new Date(), parseDate(item.date));
       const when = diff === 0 ? 'วันนี้' : diff === 1 ? 'พรุ่งนี้' : `อีก ${diff} วัน`;
       const kind = specialImageType(item);
-      return `<article class="important-day has-picture"><div class="important-day-image ${kind}" aria-hidden="true">${dayPictureMarkup(kind, item.title)}</div><div class="important-day-copy"><strong>${esc(when)}</strong><span>${esc(item.title)}</span><small>${esc(thaiDate(item.date, false))}</small></div></article>`;
+      const hasPhoto = Boolean(importantDayBackgroundAsset(item));
+      return `<article class="important-day has-picture"><div class="important-day-image ${hasPhoto ? 'has-photo' : kind}" aria-hidden="true">${importantDayVisualMarkup(item)}</div><div class="important-day-copy"><strong>${esc(when)}</strong><span>${esc(item.title)}</span><small>${esc(thaiDate(item.date, false))}</small></div></article>`;
     }).join('') : '<div class="empty-state">ยังไม่มีข้อมูลวันสำคัญถัดไปในชุดข้อมูลปีนี้</div>';
   }
 
@@ -559,7 +596,8 @@
     const specialHtml = [
       ...special.map((item) => {
         const kind = specialImageType(item);
-        return `<div class="day-item special-item"><div class="item-image ${kind}" aria-hidden="true">${dayPictureMarkup(kind, item.title)}</div><div class="item-copy"><strong>${esc(item.title)}</strong><span>${esc(item.note || item.type)}</span></div></div>`;
+        const hasPhoto = Boolean(importantDayBackgroundAsset(item));
+        return `<div class="day-item special-item"><div class="item-image ${hasPhoto ? 'has-photo' : kind}" aria-hidden="true">${importantDayVisualMarkup(item)}</div><div class="item-copy"><strong>${esc(item.title)}</strong><span>${esc(item.note || item.type)}</span></div></div>`;
       }),
       ...(buddhist ? [`<div class="day-item special-item"><div class="item-image buddhist" aria-hidden="true">${dayPictureMarkup('buddhist', 'วันพระ')}</div><div class="item-copy"><strong>วันพระ</strong><span>${esc(buddhist.lunar)}</span></div></div>`] : []),
     ];
