@@ -122,20 +122,33 @@
   }
 
   function inlineIcon(kind) {
+    const palette = {
+      stroke: '#582a68',
+      plum: '#6a34a0',
+      gold: '#e7c35c',
+      cream: '#fff8e7',
+      lavender: '#eadff7',
+      pink: '#f6c7d8',
+      blue: '#8fb5f0',
+      red: '#ef7e88',
+      green: '#b9d998',
+      teal: '#90d6d5',
+    };
+    const S = palette.stroke;
+    const stroke = `stroke="${S}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"`;
     const icons = {
-      buddhist: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8c2.7 0 4.8 2.1 4.8 4.8 0 1-.3 1.8-.8 2.6 3.6 1.5 6 5 6 9.1v2.7c0 1.8-.7 3.5-1.8 4.8l2.6 4.2H13.2l2.6-4.2A7.1 7.1 0 0 1 14 27.2v-2.7c0-4.1 2.4-7.6 6-9.1a4.7 4.7 0 0 1-.8-2.6C19.2 10.1 21.3 8 24 8Zm0 10.4c-3.4 0-6.1 2.7-6.1 6.1v2.7c0 2.2 1.2 4.1 3 5.1h6.2c1.8-1 3-2.9 3-5.1v-2.7c0-3.4-2.7-6.1-6.1-6.1Z" fill="currentColor"/><path d="M18 38h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
-      temple: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 34h28M15 34v-7m6 7v-7m6 7v-7m6 7v-7M9 24h30M24 11l13 9H11l13-9Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      scout: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10c1.8 4.2 4.1 6.7 8 8.7-3.1.8-5.1 2.2-8 4.8-2.9-2.6-4.9-4-8-4.8 3.9-2 6.2-4.5 8-8.7Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M18 27c2.2 1.5 3.9 2.4 6 2.4s3.8-.9 6-2.4M22 29l2 7 2-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      'thai-language': `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 15h22M24 15v18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M18 23c0 6.3 3.1 9 6.1 9 2.7 0 4.9-2.1 4.9-4.9 0-2.2-1.8-4-4-4-1.8 0-3.3 1.5-3.3 3.3 0 1.3 1 2.3 2.3 2.3 1 0 1.8-.8 1.8-1.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      mother: `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="3.2" fill="currentColor"/><path d="M24 12c2.3 3.6 2.3 7 0 10.5-2.3-3.5-2.3-6.9 0-10.5Zm0 13.5c3.6 2.3 7 2.3 10.5 0-3.5-2.3-6.9-2.3-10.5 0Zm0 0c-2.3 3.6-2.3 7 0 10.5 2.3-3.5 2.3-6.9 0-10.5Zm0 0c-3.6-2.3-7-2.3-10.5 0 3.5 2.3 6.9 2.3 10.5 0Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
-      'thai-flag': `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 37V11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M15 13h18l-3.5 3 3.5 3H15Zm0 8h14l-2.8 3 2.8 3H15Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
-      water: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 32c2.4 1.8 4.8 2.7 8 2.7s5.6-.9 8-2.7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 25c3-3.7 6-6.9 10-11 4 4.1 7 7.3 10 11 0 5.5-4.5 10-10 10S14 30.5 14 25Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
-      municipality: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 36V14l12-4 12 4v22M18 36V22h12v14M12 18h24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      special: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10l3.3 6.7 7.4 1.1-5.3 5.2 1.2 7.4L24 27l-6.6 3.4 1.2-7.4-5.3-5.2 7.4-1.1L24 10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
+      buddhist: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8.5c2.5 0 4.5 1.9 4.5 4.3 0 1-.3 1.9-1 2.7 3.7 1.8 6.4 5.4 6.4 9.7 0 3-1.2 5.7-3.2 7.6l2.1 5H15.2l2.1-5A10.3 10.3 0 0 1 14 25.2c0-4.3 2.7-7.9 6.4-9.7-.6-.8-1-1.7-1-2.7 0-2.4 2-4.3 4.6-4.3Z" fill="#fff2bf" ${stroke}/><path d="M17.8 30.8c1.8 1.2 3.9 1.8 6.2 1.8s4.4-.6 6.2-1.8" fill="none" ${stroke}/><path d="M19.2 24.8c1.3-3.1 3.1-4.7 4.8-4.7 1.7 0 3.5 1.6 4.8 4.7" fill="none" ${stroke}/><path d="M19.5 39.3h9" fill="none" ${stroke}/></svg>`,
+      temple: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M11 35h26M15 35v-8m6.2 8v-8m6.2 8v-8m6.1 8v-8M9.5 24.5h29M24 12l13 9H11L24 12Z" fill="#fff4cf" ${stroke}/><path d="M20.5 18.5h7" fill="none" ${stroke}/></svg>`,
+      scout: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10.5c2.5 5.6 5.8 8.5 9.8 10-4.1.8-6.7 2.5-9.8 5.6-3.1-3.1-5.7-4.8-9.8-5.6 4-1.5 7.3-4.4 9.8-10Z" fill="#f6d48d" ${stroke}/><path d="M17.8 27.5c2 1.5 3.8 2.3 6.2 2.3 2.4 0 4.2-.8 6.2-2.3M21.7 30.2l2.3 6.3 2.3-6.3" fill="none" ${stroke}/></svg>`,
+      'thai-language': `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="10" width="22" height="28" rx="4.5" fill="#efe4fb" ${stroke}/><path d="M19 17h10M24 17v14" fill="none" ${stroke}/><path d="M20 24.5c0 4.7 2.4 7.5 5.4 7.5 2.1 0 3.8-1.7 3.8-3.8 0-1.8-1.4-3.2-3.2-3.2-1.4 0-2.6 1.2-2.6 2.6 0 .9.8 1.7 1.7 1.7" fill="none" ${stroke}/></svg>`,
+      mother: `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="4" fill="#ffe3ec" ${stroke}/><path d="M24 10.5c2.8 4 2.8 7.2 0 10.8-2.8-3.6-2.8-6.8 0-10.8Zm0 13.5c4 2.8 7.2 2.8 10.8 0-3.6-2.8-6.8-2.8-10.8 0Zm0 0c-2.8 4-2.8 7.2 0 10.8 2.8-3.6 2.8-6.8 0-10.8Zm0 0c-4-2.8-7.2-2.8-10.8 0 3.6 2.8 6.8 2.8 10.8 0Z" fill="#fff7fb" ${stroke}/></svg>`,
+      'thai-flag': `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 37V11" fill="none" ${stroke}/><path d="M15 13h18v12H15Z" fill="#ffffff" ${stroke}/><path d="M15 13h18v3.2H15Zm0 8.8h18V25H15Z" fill="#ef7e88" stroke="none"/><path d="M15 16.2h18v5.6H15Z" fill="#7fa7eb" stroke="none"/></svg>`,
+      water: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M15 25.5c3.3-4.4 5.9-7.6 9-10.9 3.1 3.3 5.7 6.5 9 10.9 0 5.2-4 9.5-9 9.5s-9-4.3-9-9.5Z" fill="#d9f4f5" ${stroke}/><path d="M17 31.5c2 1.2 4.2 1.9 7 1.9 2.8 0 5-.7 7-1.9" fill="none" ${stroke}/></svg>`,
+      municipality: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 36V16l11-4 11 4v20M18 36V23h12v13" fill="#efe4fb" ${stroke}/><path d="M13 19.5h22" fill="none" ${stroke}/><circle cx="24" cy="18" r="1.7" fill="#e7c35c" stroke="none"/></svg>`,
+      special: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10.5l3.4 6.9 7.6 1.1-5.5 5.4 1.3 7.5L24 28.1l-6.8 3.3 1.3-7.5-5.5-5.4 7.6-1.1L24 10.5Z" fill="#f6e8ac" ${stroke}/></svg>`,
     };
     return icons[kind] || icons.special;
   }
-
   function buildDayMarkers(important = [], buddhist = null) {
     const markers = [];
     if (important.length) {
@@ -143,7 +156,6 @@
       const kind = specialIconType(primary);
       markers.push(`<span class="corner-icon ${kind}" title="${esc(primary.title)}" aria-label="${esc(primary.title)}">${inlineIcon(kind)}</span>`);
     }
-    if (buddhist) markers.push(`<span class="corner-icon buddhist" title="วันพระ" aria-label="วันพระ">${inlineIcon('buddhist')}</span>`);
     return markers.length ? `<div class="corner-icons">${markers.join('')}</div>` : '';
   }
 
