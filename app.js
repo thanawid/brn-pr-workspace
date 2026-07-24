@@ -121,6 +121,20 @@
     return 'special';
   }
 
+
+  function importantDayTheme(item = {}) {
+    const hay = `${item.title || ''} ${item.type || ''} ${item.note || ''}`;
+    if (/วิสาข|มาฆ|อาสาฬห|เข้าพรรษา|ออกพรรษา|บูชา|วันพระ|พรรษา/.test(hay)) return 'buddhist';
+    if (/พระบาทสมเด็จพระเจ้าอยู่หัว|สมเด็จพระนางเจ้าฯ พระบรมราชินี|ฉัตรมงคล|พืชมงคล|ราช/.test(hay)) return 'royal';
+    if (/ลูกเสือ|เยาวชน|เด็ก/.test(hay)) return 'youth';
+    if (/ภาษาไทย/.test(hay)) return 'language';
+    if (/สิ่งแวดล้อม|ต้นไม้|คลอง|ลอยกระทง|น้ำโลก/.test(hay)) return 'environment';
+    if (/ท้องถิ่นไทย|เทศบาล/.test(hay)) return 'municipal';
+    if (/ครอบครัว|แม่|พ่อ|สตรี|มะลิ/.test(hay)) return 'family';
+    if (/รัฐธรรมนูญ|จักรี|ปิยมหาราช|วันชาติ|ธงไทย/.test(hay)) return 'civic';
+    return 'general';
+  }
+
   function dayPictureAsset(kind) {
     return `assets/day-pictures/${kind}.webp`;
   }
@@ -578,13 +592,14 @@
         const diff = daysBetween(parseDate(today), parseDate(item.date));
         return diff <= 30;
       })
-      .slice(0, 6);
+      .slice(0, 3);
     $('important-days').innerHTML = upcoming.length ? upcoming.map((item) => {
       const diff = daysBetween(new Date(), parseDate(item.date));
       const when = diff === 0 ? 'วันนี้' : diff === 1 ? 'พรุ่งนี้' : `อีก ${diff} วัน`;
       const kind = specialImageType(item);
+      const theme = importantDayTheme(item);
       const hasPhoto = Boolean(importantDayBackgroundAsset(item));
-      return `<article class="important-day has-picture"><div class="important-day-image ${hasPhoto ? 'has-photo' : kind}" aria-hidden="true">${importantDayVisualMarkup(item)}</div><div class="important-day-copy"><strong>${esc(when)}</strong><span>${esc(item.title)}</span><small>${esc(thaiDate(item.date, false))}</small></div></article>`;
+      return `<article class="important-day has-picture theme-${esc(theme)}"><div class="important-day-image ${hasPhoto ? 'has-photo' : kind}" aria-hidden="true">${importantDayVisualMarkup(item)}</div><div class="important-day-copy"><strong>${esc(when)}</strong><span>${esc(item.title)}</span><small>${esc(thaiDate(item.date, false))}</small></div></article>`;
     }).join('') : '<div class="empty-state">ยังไม่มีข้อมูลวันสำคัญถัดไปในชุดข้อมูลปีนี้</div>';
   }
 

@@ -176,3 +176,59 @@ h1,h2,h3,.brand strong,.month-nav h2,.support-head strong{font-family:var(--disp
   .item-image.has-photo{width:36px;height:36px;border-radius:12px}
   .special-item{grid-template-columns:36px minmax(0,1fr);gap:10px}
 }
+
+
+/* V1.2.16 — locked release: 3-card upcoming important section with subtle accent colors and deeper hero */
+.today-command{
+  background:
+    radial-gradient(circle at 83% 16%, rgba(249,216,128,.16) 0, rgba(249,216,128,0) 18%),
+    radial-gradient(circle at 24% 84%, rgba(154,103,238,.17) 0, rgba(154,103,238,0) 30%),
+    linear-gradient(135deg,#240936 0%,#441164 46%,#6a2197 100%);
+}
+.today-command:before{background:#f1cd74;opacity:.11}
+.today-command:after{background:#8f5de0;opacity:.18}
+.next-event-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.21),rgba(255,255,255,.08));
+  border:1px solid rgba(255,255,255,.24);
+  box-shadow:0 20px 50px rgba(17,4,25,.25);
+}
+.hero-visual-wrap{opacity:.31}
+.hero-main-visual{filter:saturate(1.04) contrast(1.05) drop-shadow(0 14px 24px rgba(12,4,18,.22));}
+
+.important-days{grid-template-columns:repeat(3,minmax(0,1fr));align-content:start}
+.important-day{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(180deg,#fff 0%,#fcfafc 100%);
+  border:1px solid #ebdfef;
+  box-shadow:0 12px 26px rgba(56,23,73,.06);
+}
+.important-day::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto 0;
+  height:4px;
+  background:linear-gradient(90deg,var(--important-accent,#d8c7e6),transparent 75%);
+}
+.important-day-image{
+  border-radius:18px;
+  background:linear-gradient(180deg,var(--important-soft,#faf5ff) 0%,#fff 100%);
+  border:1px solid rgba(98,62,120,.08);
+}
+.important-day-image.has-photo{background:linear-gradient(180deg,var(--important-soft,#fff9f0) 0%,#fff 100%)}
+.important-day-copy strong{font-size:13px;line-height:1.3;color:var(--important-accent-text,var(--purple))}
+.important-day-copy span{line-height:1.55}
+.important-day-copy small{margin-top:4px;color:#887e91}
+.important-day.theme-buddhist{--important-accent:#d9a73a;--important-accent-text:#8a6211;--important-soft:#fff8ea}
+.important-day.theme-royal{--important-accent:#e0b147;--important-accent-text:#845d11;--important-soft:#fff8e7}
+.important-day.theme-youth{--important-accent:#4aa1c7;--important-accent-text:#225b86;--important-soft:#eef8ff}
+.important-day.theme-language{--important-accent:#6676d8;--important-accent-text:#3c4f9e;--important-soft:#f2f4ff}
+.important-day.theme-environment{--important-accent:#44a179;--important-accent-text:#1f7452;--important-soft:#eefbf5}
+.important-day.theme-municipal{--important-accent:#7e60c8;--important-accent-text:#57359b;--important-soft:#f5f0ff}
+.important-day.theme-family{--important-accent:#d86ba0;--important-accent-text:#a04370;--important-soft:#fff1f7}
+.important-day.theme-civic{--important-accent:#d97b57;--important-accent-text:#9a4f34;--important-soft:#fff4ef}
+.important-day.theme-general{--important-accent:#8e6db0;--important-accent-text:#5f4585;--important-soft:#f8f3fb}
+
+@media(max-width:820px){
+  .important-days{grid-template-columns:1fr}
+}
