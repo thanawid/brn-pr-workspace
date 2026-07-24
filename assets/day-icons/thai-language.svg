@@ -1,4 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect x="16" y="11" width="32" height="42" rx="6" fill="#EFE4FB" stroke="#5B2D6C" stroke-width="2.8"/>
-  <path fill="none" stroke="#5B2D6C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" d="M25 21h14M32 21v21M26.3 32.3c0 7.1 3.5 11 7.7 11 3 0 5.3-2.4 5.3-5.4 0-2.5-2-4.5-4.5-4.5-2 0-3.6 1.6-3.6 3.6 0 1.4 1.1 2.5 2.5 2.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="gBook" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7EEFF"/>
+      <stop offset="1" stop-color="#E6D5FB"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#5B2D6C" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <ellipse cx="48" cy="83" rx="18" ry="5" fill="#EADAF6"/>
+    <rect x="26" y="15" width="44" height="58" rx="9" fill="url(#gBook)" stroke="#653170" stroke-width="3"/>
+    <path d="M36 28h24M48 28v29" fill="none" stroke="#653170" stroke-width="3" stroke-linecap="round"/>
+    <path d="M37.5 44.5c0 11 5.1 17.2 11.8 17.2 4.5 0 8-3.7 8-8.1 0-3.7-2.9-6.6-6.6-6.6-3 0-5.4 2.4-5.4 5.4 0 2.1 1.7 3.8 3.8 3.8" fill="none" stroke="#653170" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="61" cy="23" r="4.2" fill="#E7C35C" stroke="#653170" stroke-width="2"/>
+  </g>
 </svg>
