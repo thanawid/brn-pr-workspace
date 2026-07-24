@@ -108,6 +108,49 @@
   function esc(value = '') {
     return String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
   }
+
+  function specialIconType(item = {}) {
+    const hay = `${item.title || ''} ${item.type || ''} ${item.note || ''}`;
+    if (/ลูกเสือ/.test(hay)) return 'scout';
+    if (/ภาษาไทย/.test(hay)) return 'thai-language';
+    if (/แม่/.test(hay)) return 'mother';
+    if (/พ่อ|วันชาติ|ธงไทย|รัฐธรรมนูญ|จักรี|ปิยมหาราช/.test(hay)) return 'thai-flag';
+    if (/สิ่งแวดล้อม|ต้นไม้|คลอง|ลอยกระทง|น้ำโลก/.test(hay)) return 'water';
+    if (/เทศบาล|ท้องถิ่นไทย/.test(hay)) return 'municipality';
+    if (/วิสาข|มาฆ|อาสาฬห|เข้าพรรษา|ออกพรรษา|บูชา|วันพระ/.test(hay)) return 'temple';
+    return 'special';
+  }
+
+  function inlineIcon(kind) {
+    const icons = {
+      buddhist: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8c2.7 0 4.8 2.1 4.8 4.8 0 1-.3 1.8-.8 2.6 3.6 1.5 6 5 6 9.1v2.7c0 1.8-.7 3.5-1.8 4.8l2.6 4.2H13.2l2.6-4.2A7.1 7.1 0 0 1 14 27.2v-2.7c0-4.1 2.4-7.6 6-9.1a4.7 4.7 0 0 1-.8-2.6C19.2 10.1 21.3 8 24 8Zm0 10.4c-3.4 0-6.1 2.7-6.1 6.1v2.7c0 2.2 1.2 4.1 3 5.1h6.2c1.8-1 3-2.9 3-5.1v-2.7c0-3.4-2.7-6.1-6.1-6.1Z" fill="currentColor"/><path d="M18 38h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+      temple: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 34h28M15 34v-7m6 7v-7m6 7v-7m6 7v-7M9 24h30M24 11l13 9H11l13-9Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      scout: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10c1.8 4.2 4.1 6.7 8 8.7-3.1.8-5.1 2.2-8 4.8-2.9-2.6-4.9-4-8-4.8 3.9-2 6.2-4.5 8-8.7Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M18 27c2.2 1.5 3.9 2.4 6 2.4s3.8-.9 6-2.4M22 29l2 7 2-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      'thai-language': `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 15h22M24 15v18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M18 23c0 6.3 3.1 9 6.1 9 2.7 0 4.9-2.1 4.9-4.9 0-2.2-1.8-4-4-4-1.8 0-3.3 1.5-3.3 3.3 0 1.3 1 2.3 2.3 2.3 1 0 1.8-.8 1.8-1.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      mother: `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="3.2" fill="currentColor"/><path d="M24 12c2.3 3.6 2.3 7 0 10.5-2.3-3.5-2.3-6.9 0-10.5Zm0 13.5c3.6 2.3 7 2.3 10.5 0-3.5-2.3-6.9-2.3-10.5 0Zm0 0c-2.3 3.6-2.3 7 0 10.5 2.3-3.5 2.3-6.9 0-10.5Zm0 0c-3.6-2.3-7-2.3-10.5 0 3.5 2.3 6.9 2.3 10.5 0Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
+      'thai-flag': `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 37V11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M15 13h18l-3.5 3 3.5 3H15Zm0 8h14l-2.8 3 2.8 3H15Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
+      water: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 32c2.4 1.8 4.8 2.7 8 2.7s5.6-.9 8-2.7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M14 25c3-3.7 6-6.9 10-11 4 4.1 7 7.3 10 11 0 5.5-4.5 10-10 10S14 30.5 14 25Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
+      municipality: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 36V14l12-4 12 4v22M18 36V22h12v14M12 18h24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      special: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10l3.3 6.7 7.4 1.1-5.3 5.2 1.2 7.4L24 27l-6.6 3.4 1.2-7.4-5.3-5.2 7.4-1.1L24 10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
+    };
+    return icons[kind] || icons.special;
+  }
+
+  function buildDayMarkers(important = [], buddhist = null) {
+    const markers = [];
+    if (important.length) {
+      const primary = important[0];
+      const kind = specialIconType(primary);
+      markers.push(`<span class="corner-icon ${kind}" title="${esc(primary.title)}" aria-label="${esc(primary.title)}">${inlineIcon(kind)}</span>`);
+    }
+    if (buddhist) markers.push(`<span class="corner-icon buddhist" title="วันพระ" aria-label="วันพระ">${inlineIcon('buddhist')}</span>`);
+    return markers.length ? `<div class="corner-icons">${markers.join('')}</div>` : '';
+  }
+
+  function buildBuddhistWatermark(buddhist) {
+    if (!buddhist) return '';
+    return `<div class="buddhist-watermark" aria-hidden="true">${inlineIcon('buddhist')}</div>`;
+  }
   function normalizeEvent(raw) {
     return {
       ...raw,
@@ -373,17 +416,27 @@
     const todayKey = iso(new Date());
     const selectedKey = iso(state.selectedDate);
     const cells = [];
+    const showHolidays = $('show-holidays').checked;
+    const showBuddhist = $('show-buddhist').checked;
     for (let i = 0; i < 42; i += 1) {
       const date = addDays(gridStart, i);
       const key = iso(date);
       const dayEvents = sortedEvents(visibleEvents.filter((event) => event.date === key));
       const important = IMPORTANT.filter((item) => item.date === key);
       const buddhist = BUDDHIST.find((item) => item.date === key);
+      const visibleImportant = showHolidays ? important : [];
+      const visibleBuddhist = showBuddhist ? buddhist : null;
       const chips = [];
-      if ($('show-holidays').checked) important.forEach((item) => chips.push(`<button class="chip holiday" data-date-only="${key}" type="button">${esc(item.title)}</button>`));
+      visibleImportant.forEach((item) => chips.push(`<button class="chip holiday" data-date-only="${key}" type="button">${esc(item.title)}</button>`));
       dayEvents.slice(0, 3).forEach((event) => chips.push(`<button class="chip ${esc(event.category)}" data-event-id="${esc(event.id)}" type="button">${esc(event.startTime || event.time || '')}${event.startTime || event.time ? ' ' : ''}${esc(event.title)}</button>`));
-      const hiddenCount = Math.max(0, dayEvents.length + (($('show-holidays').checked) ? important.length : 0) - 3);
-      cells.push(`<div class="day ${date.getMonth() !== month ? 'outside' : ''} ${key === todayKey ? 'today' : ''} ${key === selectedKey ? 'selected' : ''}" role="gridcell" data-day="${key}"><span class="day-number">${date.getDate()}</span>${$('show-buddhist').checked && buddhist ? `<span class="lunar">วันพระ · ${esc(buddhist.lunar)}</span>` : ''}<div class="entries">${chips.slice(0, 3).join('')}${hiddenCount ? `<span class="more">+${hiddenCount} รายการ</span>` : ''}</div></div>`);
+      const hiddenCount = Math.max(0, dayEvents.length + visibleImportant.length - 3);
+      const dayClasses = ['day'];
+      if (date.getMonth() !== month) dayClasses.push('outside');
+      if (key === todayKey) dayClasses.push('today');
+      if (key === selectedKey) dayClasses.push('selected');
+      if (visibleBuddhist) dayClasses.push('has-buddhist');
+      if (visibleImportant.length) dayClasses.push('has-important');
+      cells.push(`<div class="${dayClasses.join(' ')}" role="gridcell" data-day="${key}">${buildBuddhistWatermark(visibleBuddhist)}${buildDayMarkers(visibleImportant, visibleBuddhist)}<span class="day-number">${date.getDate()}</span>${visibleBuddhist ? `<span class="lunar">วันพระ · ${esc(visibleBuddhist.lunar)}</span>` : ''}<div class="entries">${chips.slice(0, 3).join('')}${hiddenCount ? `<span class="more">+${hiddenCount} รายการ</span>` : ''}</div></div>`);
     }
     $('calendar-grid').innerHTML = cells.join('');
   }
@@ -455,7 +508,8 @@
     $('important-days').innerHTML = upcoming.length ? upcoming.map((item) => {
       const diff = daysBetween(new Date(), parseDate(item.date));
       const when = diff === 0 ? 'วันนี้' : diff === 1 ? 'พรุ่งนี้' : `อีก ${diff} วัน`;
-      return `<article class="important-day"><strong>${esc(when)}</strong><span>${esc(item.title)}</span><small>${esc(thaiDate(item.date, false))}</small></article>`;
+      const kind = specialIconType(item);
+      return `<article class="important-day has-icon"><div class="important-day-icon ${kind}" aria-hidden="true">${inlineIcon(kind)}</div><div class="important-day-copy"><strong>${esc(when)}</strong><span>${esc(item.title)}</span><small>${esc(thaiDate(item.date, false))}</small></div></article>`;
     }).join('') : '<div class="empty-state">ยังไม่มีข้อมูลวันสำคัญถัดไปในชุดข้อมูลปีนี้</div>';
   }
 
@@ -468,7 +522,13 @@
     const special = IMPORTANT.filter((item) => item.date === dateKey);
     const buddhist = BUDDHIST.find((item) => item.date === dateKey);
     $('day-title').textContent = thaiDate(dateKey);
-    const specialHtml = [...special.map((item) => `<div class="day-item"><strong>${esc(item.title)}</strong><span>${esc(item.note || item.type)}</span></div>`), ...(buddhist ? [`<div class="day-item"><strong>วันพระ</strong><span>${esc(buddhist.lunar)}</span></div>`] : [])];
+    const specialHtml = [
+      ...special.map((item) => {
+        const kind = specialIconType(item);
+        return `<div class="day-item special-item"><div class="item-icon ${kind}" aria-hidden="true">${inlineIcon(kind)}</div><div class="item-copy"><strong>${esc(item.title)}</strong><span>${esc(item.note || item.type)}</span></div></div>`;
+      }),
+      ...(buddhist ? [`<div class="day-item special-item"><div class="item-icon buddhist" aria-hidden="true">${inlineIcon('buddhist')}</div><div class="item-copy"><strong>วันพระ</strong><span>${esc(buddhist.lunar)}</span></div></div>`] : []),
+    ];
     const eventHtml = events.map((event) => `<button class="day-item" data-day-event-id="${esc(event.id)}" type="button"><strong>${esc(event.title)}</strong><span>${esc(displayTime(event))} · ${esc(event.location || event.owner || 'ยังไม่ระบุสถานที่')}</span><span>${STATUSES[event.status] || 'รอข้อมูล'} · ความพร้อม ${readiness(event).score}%</span></button>`);
     $('day-list').innerHTML = [...specialHtml, ...eventHtml].join('') || '<div class="empty-state">วันนี้ยังไม่มีงาน กดเพิ่มงานเพื่อบันทึกลงปฏิทินทีม</div>';
     $('day-dialog').showModal();
