@@ -122,7 +122,7 @@
   }
 
   function dayPictureAsset(kind) {
-    return `assets/day-pictures/${kind}.png`;
+    return `assets/day-pictures/${kind}.webp`;
   }
 
   function dayPictureMarkup(kind, alt = '') {
